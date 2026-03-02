@@ -1,4 +1,4 @@
-Arzu
+ARZU'NUN GEREKSİNİMLERİ
 1. KULLANICI KAYIT :  Kullanıcıların alışveriş sitesine ister yeni hesap oluşturarak isterse önceden oluşturmuş olduğu bilgilerle giriş yapmasını sağlar
 
 2. HESAP SİLME : Kullanıcı hesabınızı kalıcı olarak kaldırma işlemidir. 
