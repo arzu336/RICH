@@ -1,5 +1,7 @@
 # RICH
 
+(rich.png)
+
 **Proje Tanımı:**  
 RICH projesi, kullanıcıların çeşitli kategorilerdeki ürünleri inceleyebileceği, satın alabileceği ve alışveriş deneyimini dijital ortamda kolayca gerçekleştirebileceği bir e-ticaret (alışveriş) platformudur.  
 
