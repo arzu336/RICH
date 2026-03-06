@@ -1,34 +1,28 @@
-# API Tasarımı - OpenAPI Specification Örneği
-
-**OpenAPI Spesifikasyon Dosyası:** [lamine.yaml](lamine.yaml)
-
-Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış örnek bir API tasarımını içermektedir.
-
-## OpenAPI Specification
-
-```yaml
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  title: E-Ticaret API
+  title: RICH Alısveriş API
   description: |
     E-ticaret platformu için RESTful API.
     
     ## Özellikler
-    - Kullanıcı yönetimi
-    - Ürün katalog yönetimi
-    - Sipariş işlemleri
+    - Kullanıcı yönetimi(kayıt,giriş,çıkış,hesap silme)
+    - Ürün katalog yönetimi(kategori,beden,renk,stok,fiyat sıralama)
+    -Favoriler yönetimi
+    -Sepet yönetimi
+    -Ödeme işlemleri
+    -Adres Yönetimi
     - JWT tabanlı kimlik doğrulama
   version: 1.0.0
   contact:
     name: API Destek Ekibi
-    email: api-support@yazmuh.com
-    url: https://api.yazmuh.com/support
+    email: api-support@rich.com
+    url: https://api.rich.com/support
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: https://api.yazmuh.com/v1
+  - url: https://rich-api.com/v1
     description: Production server
   - url: https://staging-api.yazmuh.com/v1
     description: Staging server
@@ -37,20 +31,26 @@ servers:
 
 tags:
   - name: users
-    description: Kullanıcı yönetimi işlemleri
-  - name: products
-    description: Ürün katalog işlemleri
-  - name: orders
-    description: Sipariş işlemleri
+    description: Kullanıcı işlemleri
   - name: auth
-    description: Kimlik doğrulama işlemleri
+    description: Kimlik doğrulama
+  - name: products
+    description: Ürün işlemleri
+  - name: favorites
+    description: Favoriler işlemleri
+  - name: cart
+    description: Sepet işlemleri
+  - name: orders
+    description: Sipariş ve ödeme işlemleri
+  - name: addresses
+    description: Adres yönetimi
 
 paths:
   /auth/register:
     post:
       tags:
         - auth
-      summary: Yeni kullanıcı kaydı
+      summary: Kullanıcı kaydı
       description: Sisteme yeni bir kullanıcı kaydeder
       operationId: registerUser
       requestBody:
@@ -88,7 +88,7 @@ paths:
       tags:
         - auth
       summary: Kullanıcı girişi
-      description: Email ve şifre ile giriş yapar, JWT token döner
+      description: Email ve şifre ile giriş yapar
       operationId: loginUser
       requestBody:
         required: true
@@ -106,96 +106,26 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /users:
-    get:
+  /auth/logout:
+    post:
       tags:
-        - users
-      summary: Kullanıcı listesi
-      description: Sistemdeki tüm kullanıcıları listeler (sayfalama ile)
-      operationId: listUsers
+        - auth
+      summary: Çıkış yap
+      description: Kullanıcının oturumunu sonlandırır
+      operationId: logoutUser
       security:
         - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/LimitParam'
-        - name: role
-          in: query
-          description: Kullanıcı rolüne göre filtrele
-          schema:
-            type: string
-            enum: [admin, user, guest]
       responses:
         '200':
-          description: Başarılı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserList'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Çıkış başarılı        
+
 
   /users/{userId}:
-    get:
-      tags:
-        - users
-      summary: Kullanıcı detayı
-      description: Belirli bir kullanıcının detay bilgilerini getirir
-      operationId: getUserById
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/UserIdParam'
-      responses:
-        '200':
-          description: Başarılı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-    
-    put:
-      tags:
-        - users
-      summary: Kullanıcı güncelle
-      description: Kullanıcı bilgilerini günceller
-      operationId: updateUser
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/UserIdParam'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserUpdate'
-      responses:
-        '200':
-          description: Kullanıcı başarıyla güncellendi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-    
     delete:
       tags:
         - users
-      summary: Kullanıcı sil
-      description: Kullanıcıyı sistemden siler
+      summary: Hesap silme
+      description: Kullanıcı hesabını siler
       operationId: deleteUser
       security:
         - bearerAuth: []
@@ -211,12 +141,12 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /products:
+    /products:
     get:
       tags:
         - products
       summary: Ürün listesi
-      description: Tüm ürünleri listeler
+      description: Ürünleri kategori, fiyat ve stok bilgisine göre listeler
       operationId: listProducts
       parameters:
         - $ref: '#/components/parameters/PageParam'
@@ -226,18 +156,33 @@ paths:
           description: Kategoriye göre filtrele
           schema:
             type: string
+            enum: [kadin, erkek, bebek, aksesuar]
         - name: minPrice
           in: query
           description: Minimum fiyat
           schema:
             type: number
-            format: float
         - name: maxPrice
           in: query
-          description: Maximum fiyat
+          description: Maksimum fiyat
           schema:
             type: number
-            format: float
+        - name: color
+          in: query
+          description: Ürün rengine göre filtrele
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: Ürün bedenine göre filtrele
+          schema:
+            type: string
+        - name: sortByPrice
+          in: query
+          description: Fiyata göre sıralama (asc/desc)
+          schema:
+            type: string
+            enum: [asc, desc]
       responses:
         '200':
           description: Başarılı
@@ -245,13 +190,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductList'
-    
+
+    /favorites:
     post:
       tags:
-        - products
-      summary: Yeni ürün ekle
-      description: Sisteme yeni bir ürün ekler
-      operationId: createProduct
+        - favorites
+      summary: Favorilere ürün ekle
+      description: Kullanıcının ürününü favorilere ekler
+      operationId: addFavorite
       security:
         - bearerAuth: []
       requestBody:
@@ -259,61 +205,105 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductCreate'
+              $ref: '#/components/schemas/FavoriteCreate'
       responses:
         '201':
-          description: Ürün başarıyla oluşturuldu
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
+          description: Ürün favorilere eklendi
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /products/{productId}:
     get:
       tags:
-        - products
-      summary: Ürün detayı
-      description: Belirli bir ürünün detay bilgilerini getirir
-      operationId: getProductById
-      parameters:
-        - $ref: '#/components/parameters/ProductIdParam'
+        - favorites
+      summary: Favori ürünleri listele
+      description: Kullanıcının favori ürünlerini listeler
+      operationId: listFavorites
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Başarılı
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: '#/components/schemas/ProductList'
 
-  /orders:
-    get:
+    /favorites/{productId}:
+    delete:
       tags:
-        - orders
-      summary: Sipariş listesi
-      description: Kullanıcının siparişlerini listeler
-      operationId: listOrders
+        - favorites
+      summary: Favoriden ürün sil
+      description: Kullanıcının favorilerinden ürün siler
+      operationId: deleteFavorite
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/ProductIdParam'
+      responses:
+        '204':
+          description: Ürün favorilerden silindi
+
+    /cart:
+    get:
+      tags:
+        - cart
+      summary: Sepeti görüntüle
+      description: Kullanıcının sepetini listeler
+      operationId: viewCart
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Başarılı
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderList'
-    
+                $ref: '#/components/schemas/Cart'
+
+
+
+    post:
+      tags:
+        - cart
+      summary: Sepete ürün ekle
+      description: Kullanıcı ürünü sepete ekler
+      operationId: addCartItem
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemCreate'
+      responses:
+        '201':
+          description: Ürün sepete eklendi
+
+    delete:
+      tags:
+        - cart
+      summary: Sepetten ürün sil
+      description: Kullanıcı sepetteki ürünü kaldırır
+      operationId: removeCartItem
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemDelete'
+      responses:
+        '204':
+          description: Ürün sepetten silindi
+
+    /orders:
     post:
       tags:
         - orders
-      summary: Yeni sipariş oluştur
-      description: Yeni bir sipariş oluşturur
+      summary: Ödeme ve sipariş oluşturma
+      description: Kullanıcının sepetindeki ürünlerle sipariş oluşturmasını sağlar
       operationId: createOrder
       security:
         - bearerAuth: []
@@ -325,11 +315,17 @@ paths:
               $ref: '#/components/schemas/OrderCreate'
       responses:
         '201':
-          description: Sipariş başarıyla oluşturuldu
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
+          description: Sipariş oluşturuldu
+        '400':
+          $ref: '#/components/responses/BadRequest' 
+
+
+                                       
+
+
+
+    
+
 
 components:
   securitySchemes:
@@ -344,7 +340,7 @@ components:
       name: userId
       in: path
       required: true
-      description: Kullanıcı ID'si
+      description: Kullanıcı ID
       schema:
         type: string
         format: uuid
@@ -353,7 +349,7 @@ components:
       name: productId
       in: path
       required: true
-      description: Ürün ID'si
+      description: Ürün ID
       schema:
         type: string
         format: uuid
@@ -385,46 +381,22 @@ components:
         - email
         - firstName
         - lastName
-        - role
         - createdAt
       properties:
         id:
           type: string
           format: uuid
-          description: Kullanıcı benzersiz kimliği
-          example: "123e4567-e89b-12d3-a456-426614174000"
         email:
           type: string
-          format: email
-          description: Kullanıcı email adresi
-          example: "kullanici@example.com"
         firstName:
           type: string
-          description: Ad
-          example: "Ahmet"
         lastName:
           type: string
-          description: Soyad
-          example: "Yılmaz"
-        role:
-          type: string
-          enum: [admin, user, guest]
-          description: Kullanıcı rolü
-          example: "user"
         createdAt:
           type: string
           format: date-time
-          description: Oluşturulma tarihi
-          example: "2024-01-15T10:30:00Z"
-        updatedAt:
-          type: string
-          format: date-time
-          description: Güncellenme tarihi
-          example: "2024-01-20T14:45:00Z"
         phone:
           type: string
-          description: Telefon numarası
-          example: "+905551234567"
 
     UserRegistration:
       type: object
@@ -436,255 +408,44 @@ components:
       properties:
         email:
           type: string
-          format: email
-          example: "kullanici@example.com"
         password:
           type: string
-          format: password
-          minLength: 8
-          example: "Guvenli123!"
         firstName:
           type: string
-          minLength: 2
-          example: "Ahmet"
         lastName:
           type: string
-          minLength: 2
-          example: "Yılmaz"
-
-    UserUpdate:
-      type: object
-      properties:
-        firstName:
-          type: string
-          minLength: 2
-          example: "Ahmet"
-        lastName:
-          type: string
-          minLength: 2
-          example: "Yılmaz"
-        email:
-          type: string
-          format: email
-          example: "yeniemail@example.com"
-        phone:
-          type: string
-          description: Telefon numarası
-          example: "+905551234567"
 
     LoginCredentials:
       type: object
-      required:
-        - email
-        - password
+      required: [email, password]
       properties:
         email:
           type: string
-          format: email
-          example: "kullanici@example.com"
         password:
           type: string
-          format: password
-          example: "Guvenli123!"
-
-    AuthToken:
-      type: object
-      required:
-        - token
-        - expiresIn
-        - user
-      properties:
-        token:
-          type: string
-          description: JWT access token
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        expiresIn:
-          type: integer
-          description: Token geçerlilik süresi (saniye)
-          example: 3600
-        user:
-          $ref: '#/components/schemas/User'
-
+    
     Product:
       type: object
-      required:
-        - id
-        - name
-        - price
-        - category
-        - stock
+      required: [id, name, price, category]
       properties:
         id:
           type: string
-          format: uuid
-          example: "987e6543-e21b-12d3-a456-426614174000"
         name:
-          type: string
-          description: Ürün adı
-          example: "Laptop"
-        description:
-          type: string
-          description: Ürün açıklaması
-          example: "15.6 inç, 16GB RAM, 512GB SSD"
-        price:
-          type: number
-          format: float
-          description: Ürün fiyatı (TL)
-          example: 25999.99
-        category:
-          type: string
-          description: Ürün kategorisi
-          example: "Elektronik"
-        stock:
-          type: integer
-          description: Stok miktarı
-          example: 50
-        imageUrl:
-          type: string
-          format: uri
-          description: Ürün görseli URL'i
-          example: "https://example.com/images/laptop.jpg"
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    ProductCreate:
-      type: object
-      required:
-        - name
-        - price
-        - category
-        - stock
-      properties:
-        name:
-          type: string
-          minLength: 3
-        description:
           type: string
         price:
           type: number
-          format: float
-          minimum: 0
         category:
+          type: string
+        description:
           type: string
         stock:
           type: integer
-          minimum: 0
         imageUrl:
           type: string
-          format: uri
-
-    Order:
-      type: object
-      required:
-        - id
-        - userId
-        - items
-        - totalAmount
-        - status
-        - createdAt
-      properties:
-        id:
+        size:
           type: string
-          format: uuid
-        userId:
+        color:
           type: string
-          format: uuid
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderItem'
-        totalAmount:
-          type: number
-          format: float
-          description: Toplam tutar (TL)
-        status:
-          type: string
-          enum: [pending, processing, shipped, delivered, cancelled]
-          description: Sipariş durumu
-        shippingAddress:
-          $ref: '#/components/schemas/Address'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    OrderCreate:
-      type: object
-      required:
-        - items
-        - shippingAddress
-      properties:
-        items:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            required:
-              - productId
-              - quantity
-            properties:
-              productId:
-                type: string
-                format: uuid
-              quantity:
-                type: integer
-                minimum: 1
-        shippingAddress:
-          $ref: '#/components/schemas/Address'
-
-    OrderItem:
-      type: object
-      properties:
-        productId:
-          type: string
-          format: uuid
-        productName:
-          type: string
-        quantity:
-          type: integer
-        unitPrice:
-          type: number
-          format: float
-        totalPrice:
-          type: number
-          format: float
-
-    Address:
-      type: object
-      required:
-        - street
-        - city
-        - postalCode
-        - country
-      properties:
-        street:
-          type: string
-          example: "Atatürk Caddesi No:123"
-        city:
-          type: string
-          example: "İstanbul"
-        postalCode:
-          type: string
-          example: "34000"
-        country:
-          type: string
-          example: "Türkiye"
-
-    UserList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
 
     ProductList:
       type: object
@@ -694,7 +455,77 @@ components:
           items:
             $ref: '#/components/schemas/Product'
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: '#/components/schemas/Pagination' 
+
+    FavoriteCreate:
+      type: object
+      required: [productId]
+      properties:
+        productId:
+          type: string
+
+    Cart:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        totalAmount:
+          type: number
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+
+    CartItemCreate:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+
+    CartItemDelete:
+      type: object
+      required: [productId]
+      properties:
+        productId:
+          type: string
+
+    OrderCreate:
+      type: object
+      required: [items, shippingAddress]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CartItem'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      required: [street, city, postalCode, country]
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
 
     OrderList:
       type: object
@@ -702,7 +533,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Order'
+            $ref: '#/components/schemas/OrderCreate'
         pagination:
           $ref: '#/components/schemas/Pagination'
 
@@ -711,86 +542,52 @@ components:
       properties:
         page:
           type: integer
-          description: Mevcut sayfa
-          example: 1
         limit:
           type: integer
-          description: Sayfa başına kayıt
-          example: 20
         totalPages:
           type: integer
-          description: Toplam sayfa sayısı
-          example: 5
         totalItems:
-          type: integer
-          description: Toplam kayıt sayısı
-          example: 95
+          type: integer 
 
     Error:
       type: object
-      required:
-        - code
-        - message
+      required: [code, message]
       properties:
         code:
           type: string
-          description: Hata kodu
-          example: "VALIDATION_ERROR"
         message:
           type: string
-          description: Hata mesajı
-          example: "Geçersiz email adresi"
-        details:
-          type: array
-          description: Detaylı hata bilgileri
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-                example: "email"
-              message:
-                type: string
-                example: "Email formatı geçersiz"
 
-  responses:
-    BadRequest:
-      description: Geçersiz istek
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: "BAD_REQUEST"
-            message: "İstek parametreleri geçersiz"
-    
+    responses:
+      BadRequest:
+        description: Geçersiz istek
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'   
+
     Unauthorized:
       description: Yetkisiz erişim
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            code: "UNAUTHORIZED"
-            message: "Kimlik doğrulama başarısız"
-    
     NotFound:
       description: Kaynak bulunamadı
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            code: "NOT_FOUND"
-            message: "İstenen kaynak bulunamadı"
-    
     Forbidden:
       description: Erişim reddedildi
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            code: "FORBIDDEN"
-            message: "Bu işlem için yetkiniz bulunmamaktadır"
+
+
+
+
+   
+
 ``
