@@ -1,49 +1,78 @@
-ARZU'NUN GEREKSİNİMLERİ
+# Arzu KÜÇÜK REST API Metotları
 
-1. Kullanıcı Kayıt
+**API Test Videosu:** [Link buraya eklenecek](https://example.com)
 
-API Metodu: POST /auth/register
+## 1. Kullanıcı Kayıt
+- **Endpoint:** `POST /auth/register`
+- **Request Body:** 
+  ```json
+  {
+    "email": "kullanici@example.com",
+    "password": "Guvenli123!",
+    "firstName": "Ahmet",
+    "lastName": "Yılmaz"
+  }
+  ```
+- **Response:** 
+`201 Created` - Kullanıcı başarıyla oluşturuldu
+`400 Bad Request` - Geçersiz veri
+`409 Conflict` - E-posta zaten kayıtlı
 
-Açıklama: Kullanıcının ad, soyad, e-posta ve şifre bilgilerini girerek sisteme yeni hesap oluşturmasını sağlar. Girilen bilgiler doğrulandıktan sonra veritabanına kaydedilir. Aynı e-posta ile ikinci kayıt oluşturulamaz.
 
-2. Hesap Silme
 
-API Metodu: DELETE /users/{userId}
+## 2. Kullanıcı Giriş Yapma
+- **Endpoint:** `POST /auth/login`
+  **Request Body:**
+    ```json
+  {
+    "email": "kullanici@example.com",
+    "password": "Guvenli123!"
+  }
+  ```
+- **Response:** 
+`200 OK` - Kullanıcı bilgileri başarıyla girildi
+`401 Unauthorized` - Hatalı giriş bilgileri
 
-Açıklama: Kullanıcının hesabını sistemden kalıcı olarak silmesini sağlar. Bu işlem geri alınamaz ve kullanıcıya ait adres, favori ve sepet bilgileri de silinir. İşlem için kullanıcının giriş yapmış olması gerekir.
+## 3. Kullanıcı Çıkış Yapma
+- **Endpoint:** `POST /auth/logout`
+- **Authentication:** Bearer Token gerekli
+- **Response:** `200 OK` - Başarıyla çıkış yapıldı
 
-3. Giriş Yapma
+## 4. Kullanıcı Hesap Silme
+- **Endpoint:** `DELETE /users/{userId}`
+- **Path Parameters:** 
+  - `userId` (string, required) 
+- **Authentication:** Bearer Token gerekli
+- **Response:** 
+`200 OK` - Kullanıcı silindi
+`401 Unauthorized` - Yetkisiz erişim
+`404 Not Found` - Kullanıcı bulunamadı
 
-API Metodu: POST /auth/login
+## 5. Kadın Ürünleri Listeleme
+- **Endpoint:** `GET /products?category=kadin`
+- **Response:** 
+`200 OK` -Ürün listelendi
+[
+  {
+    "id": "1",
+    "name": "Elbise",
+    "price": 499.99,
+    "stock": 20,
+    "imageUrl": "image_url"
+  }
+]
 
-Açıklama: Kullanıcının e-posta ve şifre bilgilerini girerek sisteme erişmesini sağlar. Bilgiler doğru ise kullanıcı için oturum (session/token) oluşturulur.
+## 6. Erkek Ürünleri Listeleme
+- **Endpoint:** `GET /products?category=erkek`
+- **Response:** 
+`200 OK` - Ürün listelendi 
 
-4. Çıkış Yapma
+## 7. Bebek Ürünleri Listeleme
+- **Endpoint:** `GET /products?category=bebek`
+- **Response:** 
+`200 OK` - Ürün listelendi 
 
-API Metodu: POST /auth/logout
-
-Açıklama: Kullanıcının aktif oturumunu sonlandırmasını sağlar. Kullanıcı sistemden güvenli şekilde çıkış yapar ve oturum bilgileri geçersiz hale getirilir.
-
-5. Kadın Ürünleri Listeleme
-
-API Metodu: GET /products?category=kadin
-
-Açıklama: Kadın kategorisine ait ürünlerin listelenmesini sağlar. Ürün adı, fiyat, stok bilgisi ve görsel bilgileri kullanıcıya gösterilir.
-
-6. Erkek Ürünleri Listeleme
-
-API Metodu: GET /products?category=erkek
-
-Açıklama: Erkek kategorisine ait ürünlerin listelenmesini sağlar.
-
-7. Bebek Ürünleri Listeleme
-
-API Metodu: GET /products?category=bebek
-
-Açıklama: Bebek kategorisine ait ürünlerin listelenmesini sağlar.
-
-8. Aksesuar Ürünleri Listeleme
-
-API Metodu: GET /products?category=aksesuar
-
-Açıklama: Aksesuar kategorisine ait ürünlerin listelenmesini sağlar.
+## 8. Aksesuar Ürünleri Listeleme
+- **Endpoint:** `GET /products?category=aksesuar`
+- **Response:** 
+`200 OK` - Ürün listelendi 

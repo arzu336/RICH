@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0
 info:
   title: RICH Alısveriş API
   description: |
@@ -24,10 +24,8 @@ info:
 servers:
   - url: https://rich-api.com/v1
     description: Production server
-  - url: https://staging-api.yazmuh.com/v1
+  - url: https://staging-api.rich.com/v1
     description: Staging server
-  - url: http://localhost:3000/v1
-    description: Development server
 
 tags:
   - name: users
@@ -141,55 +139,116 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-    /products:
-    get:
-      tags:
-        - products
-      summary: Ürün listesi
-      description: Ürünleri kategori, fiyat ve stok bilgisine göre listeler
-      operationId: listProducts
-      parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/LimitParam'
-        - name: category
-          in: query
-          description: Kategoriye göre filtrele
-          schema:
-            type: string
-            enum: [kadin, erkek, bebek, aksesuar]
-        - name: minPrice
-          in: query
-          description: Minimum fiyat
-          schema:
-            type: number
-        - name: maxPrice
-          in: query
-          description: Maksimum fiyat
-          schema:
-            type: number
-        - name: color
-          in: query
-          description: Ürün rengine göre filtrele
-          schema:
-            type: string
-        - name: size
-          in: query
-          description: Ürün bedenine göre filtrele
-          schema:
-            type: string
-        - name: sortByPrice
-          in: query
-          description: Fiyata göre sıralama (asc/desc)
-          schema:
-            type: string
-            enum: [asc, desc]
-      responses:
-        '200':
-          description: Başarılı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductList'
+/products:
+  get:
+    tags:
+      - products
+    summary: Ürün listesi
+    description: Kategoriye göre filtreleme yapılabilir
+    operationId: listProducts
+    parameters:
+      - $ref: '#/components/parameters/PageParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: category
+        in: query
+        description: Ürün kategorisi (kadin, erkek, bebek, aksesuar)
+        schema:
+          type: string
+          enum: [kadin, erkek, bebek, aksesuar]
+      - name: minPrice
+        in: query
+        description: Minimum fiyat
+        schema:
+          type: number
+      - name: maxPrice
+        in: query
+        description: Maksimum fiyat
+        schema:
+          type: number
+      - name: color
+        in: query
+        description: Ürün rengine göre filtrele
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: Ürün bedenine göre filtrele
+        schema:
+          type: string
+      - name: sortByPrice
+        in: query
+        description: Fiyata göre sıralama (asc/desc)
+        schema:
+          type: string
+          enum: [asc, desc]
+    responses:
+      '200':
+        description: Başarılı
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductList'
+            examples:
+              women:
+                summary: Kadın ürünleri örneği
+                value:
+                  data:
+                    - id: "1"
+                      name: "Elbise"
+                      price: 499.99
+                      category: "kadin"
+                      stock: 20
+                      imageUrl: "image_url"
+                  pagination:
+                    page: 1
+                    limit: 10
+                    totalPages: 1
+                    totalItems: 1
+              men:
+                summary: Erkek ürünleri örneği
+                value:
+                  data:
+                    - id: "2"
+                      name: "Tişört"
+                      price: 199.99
+                      category: "erkek"
+                      stock: 30
+                      imageUrl: "image_url"
+                  pagination:
+                    page: 1
+                    limit: 10
+                    totalPages: 1
+                    totalItems: 1
+              baby:
+                summary: Bebek ürünleri örneği
+                value:
+                  data:
+                    - id: "3"
+                      name: "Bebek Tulumu"
+                      price: 149.99
+                      category: "bebek"
+                      stock: 25
+                      imageUrl: "image_url"
+                  pagination:
+                    page: 1
+                    limit: 10
+                    totalPages: 1
+                    totalItems: 1
+              accessory:
+                summary: Aksesuar ürünleri örneği
+                value:
+                  data:
+                    - id: "4"
+                      name: "Kolye"
+                      price: 89.99
+                      category: "aksesuar"
+                      stock: 50
+                      imageUrl: "image_url"
+                  pagination:
+                    page: 1
+                    limit: 10
+                    totalPages: 1
+                    totalItems: 1
 
     /favorites:
     post:
@@ -590,4 +649,3 @@ components:
 
    
 
-``
