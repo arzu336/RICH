@@ -8,6 +8,6 @@ Bu dokümanda, proje ekibindeki her üyenin geliştirmekten sorumlu olduğu REST
 
 ## Grup Üyelerinin REST API Metotları
 
-1. [Rojda Yıldız'ın REST API Metotları](Rojda-Yıldız/REST-API-Gorevleri.md)
-2. [Arzu Küçük'ün REST API Metotları](Arzu-Küçük/Arzu-KUCUK-REST-API-Gorevleri.md)
-3. [Buket Karaçalı'nın REST API Metotları](Buket-Karaçalı/Buket-KARACALI-REST-API-Gorevleri.md)
+1. [Rojda Yıldız'ın REST API Metotları](./Rojda-YILDIZ/REST-API-Gorevleri.md/)
+2. [Arzu Küçük'ün REST API Metotları](./Arzu-KUCUK/Arzu-KUCUK-REST-API-Gorevleri.md)
+3. [Buket Karaçalı'nın REST API Metotları](./Buket-KARAÇALI/Buket-KARACALI-REST-API-Gorevleri.md)
