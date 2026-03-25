@@ -1,46 +1,69 @@
-# Ali Tutar'ın REST API Metotları
+# BUKET KARAÇALI REST API Metotları
 
 **API Test Videosu:** [Link buraya eklenecek](https://example.com)
 
 ## 1. Üye Olma
-- **Endpoint:** `POST /auth/register`
+- **Endpoint:** `POST /products`
 - **Request Body:** 
-  ```json
-  {
-    "email": "kullanici@example.com",
-    "password": "Guvenli123!",
-    "firstName": "Ahmet",
-    "lastName": "Yılmaz"
-  }
-  ```
-- **Response:** `201 Created` - Kullanıcı başarıyla oluşturuldu
+ 
+- **Response:** `201 Created` - Ürün başarıyla yüklendi
+`400 Bad Request`-Eksik Bilgi
+    
 
-## 2. Kullanıcı Bilgilerini Görüntüleme
-- **Endpoint:** `GET /users/{userId}`
-- **Path Parameters:** 
-  - `userId` (string, required) - Kullanıcı ID'si
-- **Authentication:** Bearer Token gerekli
-- **Response:** `200 OK` - Kullanıcı bilgileri başarıyla getirildi
+## 2. Ürüne Fotoğraf Ekleme
+- **Endpoint:** `POST/products/{productID}/images`
 
-## 3. Kullanıcı Bilgilerini Güncelleme
-- **Endpoint:** `PUT /users/{userId}`
-- **Path Parameters:** 
-  - `userId` (string, required) - Kullanıcı ID'si
-- **Request Body:** 
-  ```json
-  {
-    "firstName": "Ahmet",
-    "lastName": "Yılmaz",
-    "email": "yeniemail@example.com",
-    "phone": "+905551234567"
-  }
-  ```
-- **Authentication:** Bearer Token gerekli
-- **Response:** `200 OK` - Kullanıcı başarıyla güncellendi
+- **Response:** `200 OK` - Görsel başarıyla eklendi
+`413 Payload Too Large`-Dosya boyutu çok büyük
 
-## 4. Kullanıcı Silme
-- **Endpoint:** `DELETE /users/{userId}`
+
+## 3.Ürün Bedenine Göre Filtreleme
+- **Endpoint:** `GET /products?size={sizeValue}`
 - **Path Parameters:** 
-  - `userId` (string, required) - Kullanıcı ID'si
-- **Authentication:** Bearer Token gerekli (Yönetici yetkisi veya kendi hesabını silme yetkisi)
-- **Response:** `204 No Content` - Kullanıcı başarıyla silindi
+  - `sizeValue` (string) - S,M,L,XL,38,40 vb.
+
+
+- **Response:** `200 OK` -Filtrelenen ürün listelendi
+
+## 4.Ürün Rengine Göre Filtreleme
+- **Endpoint:** `GET/pruducts?color={colorName}`
+
+- **Path Parameters:** 
+  - `colorName` (string) - Kırmızı,Mavi,Siyah vb.
+
+
+- **Response:** `200 OK` - Filtrelenen ürün listelendi
+
+## 5.Ürün Silme
+- **Endpoint:** `DELETE /products/{pruductID}`
+
+- **Authentication:** 
+  - `Admin yetkisi gerekli`
+
+- **Response:** `200 OK` - Ürün başarıyla silindi
+
+  `404 Not Found`- Ürün bulunamadı
+  ## 6.Sepeti Görüntüleme
+
+- **Endpoint:** `GET /cart`
+
+- **Authentication:** 
+  - `Bearer Taken gerekli`
+
+- **Response:** `200 OK` - Sepet içeriği listelendi,
+
+
+## 7.Sepete Ürün Ekleme
+- **Endpoint:** `POST /cart`
+ **Request Body:** 
+
+- **Response:** `201 Created` -Ürün sepete eklendi
+
+ `400 Bad Request`-Stok yetersiz
+
+
+## 8.Sepetten Ürün Silme
+- **Endpoint:** `DELETE /cart/{productID}`
+
+
+- **Response:** `200 OK` -Ürün sepetten kaldırıldı
