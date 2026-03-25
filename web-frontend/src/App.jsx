@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
 import Odeme from './odeme'
+import Adres from './adres'
 import Arama from './arama'
 import Favoriler from './favoriler'
 import Sepet from './sepet'
@@ -36,7 +37,7 @@ function App() {
         {activeTab === 'magaza' && <UrunDetay />}
         {activeTab === 'favoriler' && <Favoriler />}
         {activeTab === 'sepet' && <div className="checkout-layout"><Sepet /><Odeme /></div>}
-        {activeTab === 'hesabim' && <div className="profile-layout"><Siparislerim /><Yorumlar /></div>}
+       {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar /></div>}
       </main>
 
       <footer className="footer-modern">

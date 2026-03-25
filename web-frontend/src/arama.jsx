@@ -1,21 +1,43 @@
 import React, { useState } from 'react';
 
 function Arama() {
-  const [term, setTerm] = useState('');
-  const [sonuc, setSonuc] = useState([]);
+  const [query, setQuery] = useState('');
+  const [sonucMesaji, setSonucMesaji] = useState('');
 
-  const ara = async () => {
-    const res = await fetch(`https://senin-api-linkin.com/products/search?q=${term}`);
-    const data = await res.json();
-    setSonuc(data);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    // MADDE 5: En az 2 karakter validasyonu
+    if (value.length >= 2) {
+      // API Simülasyonu (GET /products?search=...)
+      setSonucMesaji(`"Tüm" kategorisinde "${value}" için sonuçlar listeleniyor...`);
+    } else {
+      setSonucMesaji('');
+    }
   };
 
   return (
-    <div style={{padding: '10px', borderBottom: '1px solid #444'}}>
-      <h3>2. Ürün Arama</h3>
-      <input placeholder="Ürün adı..." onChange={(e) => setTerm(e.target.value)} />
-      <button onClick={ara}>Ara</button>
+    <div className="search-wrapper">
+      <div className="search-bar-container">
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Ürün ara... (En az 2 harf)" 
+          value={query}
+          onChange={handleSearch}
+        />
+        <button className="search-btn">🔍</button>
+      </div>
+      
+      {/* MADDE 5: Kullanıcı Deneyimi Bilgilendirme Metni */}
+      {sonucMesaji && (
+        <div className="search-info-text">
+          {sonucMesaji}
+        </div>
+      )}
     </div>
   );
 }
+
 export default Arama;

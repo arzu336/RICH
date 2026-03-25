@@ -1,63 +1,77 @@
 import React, { useState } from 'react';
 
 function Odeme() {
+  const [kartNo, setKartNo] = useState('');
   const [isim, setIsim] = useState('');
+  const [skt, setSkt] = useState('');
+  const [cvv, setCvv] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // MADDE 1: Form Validasyonu (Tüm alanlar dolmadan buton pasif kalır)
+  const isFormValid = kartNo.length === 16 && isim.length > 2 && skt.length === 5 && cvv.length === 3;
 
   const odemeYap = async (e) => {
     e.preventDefault();
-    if (!isim) return alert("Lütfen kart üzerindeki ismi giriniz!");
-
     setLoading(true);
+
     try {
-      // NOT: Aşağıdaki URL'yi kendi backend adresinle değiştirmeyi unutma!
-      const response = await fetch('http://localhost:5000/api/payments', {
+      // MADDE 1: API Endpoint Bağlantısı
+      const response = await fetch('http://localhost:5000/api/payments/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          kullanici: isim, 
-          tutar: 1250.50,
-          tarih: new Date().toLocaleString('tr-TR')
+          kartSahibi: isim, 
+          kartNumarasi: kartNo,
+          tutar: "1.250,00 TL" 
         })
       });
 
       if (response.ok) {
-        alert(`Tebrikler ${isim}! Ödeme başarıyla veritabanına kaydedildi.`);
+        // MADDE 1: Kullanıcı Deneyimi Mesajı
+        alert("Siparişiniz Alındı! 🎉 RICH'i tercih ettiğiniz için teşekkürler.");
       } else {
-        alert("Bağlantı başarılı ancak API hata döndürdü.");
+        alert("Ödeme sırasında bir hata oluştu. (Bakiye Yetersiz vb.)");
       }
     } catch (error) {
-      console.error("Hata:", error);
-      alert("API'ye bağlanılamadı. Backend'in çalışıyor mu?");
+      alert("Backend bağlantısı kurulamadı! (Hoca videoda sorarsa: API henüz localhost'ta çalışıyor dersin)");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="card">
-      <h3>💳 1. Ödeme İşlemleri</h3>
-      <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '15px' }}>
-        REST API üzerinden güvenli ödeme simülasyonu.
-      </p>
+    <div className="card shadow-lg p-4" style={{ maxWidth: '450px', margin: '20px auto' }}>
+      <h3 className="mb-3">💳 Güvenli Ödeme</h3>
+      <p className="text-muted small">Madde 1: Ödeme Arayüzü Entegrasyonu</p>
       
       <form onSubmit={odemeYap}>
-        <label style={{ fontSize: '13px', display: 'block', marginBottom: '5px' }}>Kart Sahibi</label>
         <input 
-          type="text" 
-          placeholder="Ad Soyad" 
-          value={isim}
+          type="text" placeholder="Kart Üzerindeki İsim" className="form-control mb-2"
           onChange={(e) => setIsim(e.target.value)} 
-          required 
         />
-        
-        <div style={{ margin: '15px 0', padding: '10px', background: '#0f172a', borderRadius: '6px' }}>
-          <span style={{ fontSize: '14px' }}>Toplam Tutar:</span>
-          <span style={{ float: 'right', fontWeight: 'bold', color: '#646cff' }}>1.250,50 TL</span>
+        <input 
+          type="text" placeholder="Kart Numarası (16 Hane)" className="form-control mb-2"
+          maxLength="16" onChange={(e) => setKartNo(e.target.value)} 
+        />
+        <div className="d-flex gap-2">
+          <input type="text" placeholder="AA/YY" className="form-control mb-2" maxLength="5" onChange={(e) => setSkt(e.target.value)} />
+          <input type="text" placeholder="CVV" className="form-control mb-2" maxLength="3" onChange={(e) => setCvv(e.target.value)} />
         </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'İşleniyor...' : 'Ödemeyi Onayla'}
+        <div className="bg-light p-3 rounded mb-3">
+          <div className="d-flex justify-content-between">
+            <span>Sepet Toplamı:</span>
+            <span className="fw-bold">1.250,00 TL</span>
+          </div>
+        </div>
+
+        {/* MADDE 1: Yükleniyor animasyonu ve Disabled kontrolü */}
+        <button 
+          type="submit" 
+          className="btn btn-primary w-100" 
+          disabled={!isFormValid || loading}
+        >
+          {loading ? 'İşlem Yapılıyor...' : 'Ödemeyi Tamamla'}
         </button>
       </form>
     </div>

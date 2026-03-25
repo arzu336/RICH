@@ -45,3 +45,107 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); }
 }
 .dropdown-modern:hover .dropdown-content-modern { display: block; }
 .dropdown-content-modern a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
+
+/* MADDE 3: Favori (Kalp) Butonu Tasarımı */
+.wishlist-btn {
+  position: absolute;
+  top: 15px; /* Resmin üstünden boşluk */
+  right: 15px; /* Resmin sağından boşluk */
+  background: white !important; /* Beyaz yuvarlak arka plan */
+  border: none !important;
+  border-radius: 50% !important; /* Tam yuvarlak */
+  padding: 10px !important;
+  cursor: pointer;
+  opacity: 0.8; /* Hafif şeffaf */
+  transition: all 0.3s ease !important;
+  z-index: 10; /* Resmin üstünde durması için */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Mouse ile üzerine gelince */
+.wishlist-btn:hover {
+  opacity: 1; /* Tam görünür olur */
+  transform: scale(1.1); /* Hafifçe büyür (Optimistic UI Update hissi) */
+  background: #fdf2f8 !important; /* Hafif pembe arka plan */
+}
+
+/* Kırmızı kalp efekti (Eğer seçiliyse) */
+.wishlist-btn.active {
+  color: #e11d48 !important; /* Kırmızı renk */
+}
+
+/* MADDE 5: Arama Motoru Stilleri */
+.search-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-bar-container {
+  display: flex;
+  background: white;
+  border-radius: 50px;
+  padding: 5px 15px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.search-input {
+  border: none;
+  flex: 1;
+  padding: 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+.search-btn {
+  background: none !important;
+  border: none !important;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.search-info-text {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #1e3a8a; /* Kurumsal lacivert */
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* MADDE 8: Sıralama Menüsü Konumlandırma */
+.sort-container {
+  display: flex;
+  justify-content: flex-end; /* Sağa yaslar */
+  margin-bottom: 25px;
+  padding-right: 10px;
+}
+
+.sort-select {
+  padding: 10px 15px !important;
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: white !important;
+  color: #1e293b !important;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.sort-select:hover {
+  border-color: #1e3a8a !important; /* Kurumsal lacivert */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
