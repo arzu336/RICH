@@ -1,16 +1,29 @@
 import React from 'react';
 
 function Kategori() {
+  const kategoriler = [
+    { ad: 'Tümü', ikon: '🏠' },
+    { ad: 'Elektronik', ikon: '💻' },
+    { ad: 'Moda', ikon: '👕' },
+    { ad: 'Ev & Yaşam', ikon: '🛋️' },
+    { ad: 'Kozmetik', ikon: '💄' },
+    { ad: 'Spor', ikon: '⚽' },
+    { ad: 'Kitap', ikon: '📚' }
+  ];
+
   const filtrele = async (kat) => {
-    await fetch(`https://senin-api-linkin.com/products?category=${kat}`);
-    alert(`${kat} kategorisindeki ürünler filtrelendi.`);
+    console.log(`${kat} seçildi`);
+    // API bağlantın buraya gelecek
   };
 
   return (
-    <div style={{padding: '10px', borderBottom: '1px solid #444'}}>
-      <h3>7. Kategori Filtreleme</h3>
-      <button onClick={() => filtrele('Elektronik')}>Elektronik</button>
-      <button onClick={() => filtrele('Giyim')}>Giyim</button>
+    <div className="category-bar">
+      {kategoriler.map((kat, index) => (
+        <button key={index} className="category-item" onClick={() => filtrele(kat.ad)}>
+          <span className="cat-icon">{kat.ikon}</span>
+          <span className="cat-name">{kat.ad}</span>
+        </button>
+      ))}
     </div>
   );
 }
