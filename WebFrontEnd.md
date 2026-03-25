@@ -8,6 +8,6 @@ Bu dokümanda, web uygulamasının kullanıcı arayüzü (UI) ve kullanıcı den
 
 ## Grup Üyelerinin Web Frontend Görevleri
 
-1. [Arzu Küçük'ün Web Frontend Görevleri](./)
-2. [Buket Karaçalı'nın Web Frontend Görevleri](./)
-3. [Rojda Yıldız'ın Web Frontend Görevleri](./Web-Frontend-Gorevleri.md)
+1. [Arzu Küçük'ün Web Frontend Görevleri](./Arzu-KUCUK/Arzu-KUCUK-Web-Frontend-Gorevleri.md)
+2. [Buket Karaçalı'nın Web Frontend Görevleri](./Buket-KARAÇALI/Buket-KARACALI-Web-Frontend-Gorevleri.md)
+3. [Rojda Yıldız'ın Web Frontend Görevleri](./Rojda-YILDIZ/Web-Frontend-Gorevleri.md/)
