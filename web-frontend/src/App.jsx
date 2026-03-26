@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import './App.css'
-import Odeme from './odeme'
-import Adres from './adres'
-import Arama from './arama'
-import Favoriler from './favoriler'
-import Sepet from './sepet'
-import UrunDetay from './UrunDetay'
-import Yorumlar from './Yorumlar'
-import Siparislerim from './Siparislerim'
+import Odeme from './pages/odeme'
+import Adres from './pages/adres'
+import Arama from './components/arama'
+import Favoriler from './pages/favoriler'
+import Sepet from './pages/sepet'
+import UrunDetay from './pages/UrunDetay'
+import Yorumlar from './pages/Yorumlar'
+import Siparislerim from './pages/Siparislerim'
 
 function App() {
   const [activeTab, setActiveTab] = useState('magaza');
