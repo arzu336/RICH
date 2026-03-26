@@ -8,9 +8,12 @@ import Sepet from './pages/sepet'
 import UrunDetay from './pages/UrunDetay'
 import Yorumlar from './pages/Yorumlar'
 import Siparislerim from './pages/Siparislerim'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
   const [activeTab, setActiveTab] = useState('magaza');
+  
 
   return (
     <div className="rich-shop-layout">
@@ -26,6 +29,8 @@ function App() {
           </div>
           <button onClick={() => setActiveTab('favoriler')}>FAVORİLER</button>
           <button onClick={() => setActiveTab('hesabim')}>HESABIM</button>
+          <button onClick={() => setActiveTab('login')}>GİRİŞ</button>
+          <button onClick={() => setActiveTab('register')}>KAYIT</button>
         </div>
         <div className="nav-right">
           <Arama />
@@ -37,7 +42,11 @@ function App() {
         {activeTab === 'magaza' && <UrunDetay />}
         {activeTab === 'favoriler' && <Favoriler />}
         {activeTab === 'sepet' && <div className="checkout-layout"><Sepet /><Odeme /></div>}
-       {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar /></div>}
+        {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar /></div>}
+        {activeTab === 'login' && <Login />}
+        {activeTab === 'register' && <Register setActiveTab={setActiveTab} />}
+
+        
       </main>
 
       <footer className="footer-modern">
