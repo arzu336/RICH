@@ -1,10 +1,11 @@
 # 🔗 Web Frontend Görev Dağılımı
 
-**Web Frontend Adresi:** [https://rich-git-main-rojdaayldzs-projects.vercel.app/]()
+**Web Frontend Adresi:** [https://rich-git-main-rojdaayldzs-projects.vercel.app/](https://rich-git-main-rojdaayldzs-projects.vercel.app/)
 
 Bu dokümanda, web uygulamasının kullanıcı arayüzü (UI) ve kullanıcı deneyimi (UX) görevleri listelenmektedir.
 
 ---
+
 
 ## Grup Üyelerinin Web Frontend Görevleri
 
