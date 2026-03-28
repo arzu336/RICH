@@ -1,14 +1,11 @@
 import React from 'react';
 
-function Kategori() {
+function Kategori({ setSelectedCategory }) {
   const kategoriler = [
-    { id: 1, ad: 'Yeni Gelenler', ikon: '✨' },
-    { id: 2, ad: 'Kadın Giyim', ikon: '👗' },
-    { id: 3, ad: 'Erkek Giyim', ikon: '👔' },
-    { id: 4, ad: 'Aksesuar', ikon: '👜' },
-    { id: 5, ad: 'Ayakkabı', ikon: '👟' },
-    { id: 6, ad: 'Kozmetik', ikon: '💄' },
-    { id: 7, ad: 'İndirim/Sale', ikon: '🏷️' }
+    { id: 1, ad: 'Kadın Giyim', ikon: '👗', api: 'kadin' },
+    { id: 2, ad: 'Erkek Giyim', ikon: '👔', api: 'erkek' },
+    { id: 3, ad: 'Bebek', ikon: '🍼', api: 'bebek' },
+    { id: 4, ad: 'Aksesuar', ikon: '👜', api: 'aksesuar' }
   ];
 
   const kategoriSec = (api) => {

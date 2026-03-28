@@ -9,8 +9,7 @@ function Favoriler() {
     const fetchFavorites = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/favorites');
-        const data = await response.json();
+        const data = JSON.parse(localStorage.getItem("favorites")) || [];
         setFavorites(data);
       } catch (error) {
         console.error("Favoriler çekilemedi:", error);
@@ -25,9 +24,10 @@ function Favoriler() {
   // MADDE 4: Favoriden Silme (DELETE /favorites/{productId})
   const removeFavorite = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/favorites/${id}`, {
-        method: 'DELETE'
-      });
+      const updatedFavorites = favorites.filter(item => item.id !== id);
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      alert("Ürün favorilerden kaldırıldı 🗑️");
 
       if (response.ok) {
         // Optimistic UI Update: API'den cevap gelince yerel listeden hemen sil (Animasyon hissi verir)
@@ -36,6 +36,18 @@ function Favoriler() {
       }
     } catch (error) {
       alert("Silme işlemi başarısız.");
+    }
+  };
+
+  const addToFavorites = (product) => {
+    const existing = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const isExist = existing.find(item => item.id === product.id);
+
+    if (!isExist) {
+      const updated = [...existing, product];
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      alert("Favorilere eklendi ❤️");
     }
   };
 

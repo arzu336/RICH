@@ -12,14 +12,16 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import { AuthContext } from './context/AuthContext'
 import Kategori from './components/Kategori' 
+import Products from './pages/Products'
 
 
 function App() {
   const [activeTab, setActiveTab] = useState('magaza');
-  const [selectedCategory, setSelectedCategory] = useState("women's clothing");
+  const [selectedCategory, setSelectedCategory] = useState("kadin");
   const { user, logout } = useContext(AuthContext)
   const { deleteAccount } = useContext(AuthContext);
   
+  <Kategori setSelectedCategory={setSelectedCategory} />
 
   return (
     <div className="rich-shop-layout">
@@ -30,7 +32,15 @@ function App() {
           <div className="dropdown-modern">
             <button className="dropbtn-modern">KATEGORİLER ▾</button>
             <div className="dropdown-content-modern">
-              <a href="#">KADIN</a> <a href="#">ERKEK</a> <a href="#">AKSESUAR</a>
+              <button onClick={() => setSelectedCategory("women's clothing")}>
+                KADIN
+              </button>
+              <button onClick={() => setSelectedCategory("men's clothing")}>
+                ERKEK
+              </button>
+              <button onClick={() => setSelectedCategory("accessories")}>
+                AKSESUAR
+              </button>
             </div>
           </div>
           <button onClick={() => setActiveTab('favoriler')}>FAVORİLER</button>
@@ -63,12 +73,9 @@ function App() {
         {activeTab === 'magaza' && (
           <>
             <Kategori setSelectedCategory={setSelectedCategory} />
-            <UrunDetay category={selectedCategory} />
+            <Products selectedCategory={selectedCategory} />
           </>
         )}
-        {activeTab === 'kadin' && <UrunDetay category="Kadın" />}
-        {activeTab === 'erkek' && <UrunDetay category="Erkek" />}
-        {activeTab === 'aksesuar' && <UrunDetay category="Aksesuar" />}
         {activeTab === 'favoriler' && <Favoriler />}
         {activeTab === 'sepet' && <div className="checkout-layout"><Sepet /><Odeme /></div>}
         {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar />
