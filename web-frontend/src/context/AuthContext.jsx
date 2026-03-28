@@ -5,6 +5,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   // REGISTER
   const register = (name, email, password) => {
     const newUser = { name, email, password };
@@ -25,14 +30,19 @@ export const AuthProvider = ({ children }) => {
       storedUser.password === password
     ) {
       setUser(storedUser);
-      alert("Giriş başarılı!");
+      return true;
     } else {
-      alert("Email veya şifre yanlış!");
+      return false;
     }
   };
 
+  const deleteAccount = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register }}>
+    <AuthContext.Provider value={{ user, login, register , logout, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

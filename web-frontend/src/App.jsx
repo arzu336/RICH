@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import './App.css'
 import Odeme from './pages/odeme'
 import Adres from './pages/adres'
@@ -10,9 +10,15 @@ import Yorumlar from './pages/Yorumlar'
 import Siparislerim from './pages/Siparislerim'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import { AuthContext } from './context/AuthContext'
+import Kategori from './components/Kategori' 
+
 
 function App() {
   const [activeTab, setActiveTab] = useState('magaza');
+  const [selectedCategory, setSelectedCategory] = useState("women's clothing");
+  const { user, logout } = useContext(AuthContext)
+  const { deleteAccount } = useContext(AuthContext);
   
 
   return (
@@ -29,8 +35,23 @@ function App() {
           </div>
           <button onClick={() => setActiveTab('favoriler')}>FAVORİLER</button>
           <button onClick={() => setActiveTab('hesabim')}>HESABIM</button>
-          <button onClick={() => setActiveTab('login')}>GİRİŞ</button>
-          <button onClick={() => setActiveTab('register')}>KAYIT</button>
+          {user ? (
+            <>
+              <span>👤 Hoşgeldin {user.name || user.email}</span>
+              <button onClick={() => {
+                logout();
+                setActiveTab("magaza");
+              }}>
+                ÇIKIŞ
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setActiveTab('login')}>GİRİŞ</button>
+              <button onClick={() => setActiveTab('register')}>KAYIT</button>
+            </>
+          )}
+          
         </div>
         <div className="nav-right">
           <Arama />
@@ -39,11 +60,31 @@ function App() {
       </nav>
 
       <main className="content-modern">
-        {activeTab === 'magaza' && <UrunDetay />}
+        {activeTab === 'magaza' && (
+          <>
+            <Kategori setSelectedCategory={setSelectedCategory} />
+            <UrunDetay category={selectedCategory} />
+          </>
+        )}
+        {activeTab === 'kadin' && <UrunDetay category="Kadın" />}
+        {activeTab === 'erkek' && <UrunDetay category="Erkek" />}
+        {activeTab === 'aksesuar' && <UrunDetay category="Aksesuar" />}
         {activeTab === 'favoriler' && <Favoriler />}
         {activeTab === 'sepet' && <div className="checkout-layout"><Sepet /><Odeme /></div>}
-        {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar /></div>}
-        {activeTab === 'login' && <Login />}
+        {activeTab === 'hesabim' && <div className="profile-layout"><Adres /><Siparislerim /><Yorumlar />
+        <button
+        style={{background:"red", color:"white",marginTop:"20px"}}
+        onClick={() => {
+          const confirmDelete = window.confirm("Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.");
+          if (confirmDelete) {
+            deleteAccount();
+            setActiveTab("magaza");
+          }
+        }}
+      >
+        HESABI SİL</button>
+        </div>}
+        {activeTab === 'login' && <Login setActiveTab={setActiveTab} />}
         {activeTab === 'register' && <Register setActiveTab={setActiveTab} />}
 
         

@@ -1,7 +1,6 @@
 import React from 'react';
 
 function Kategori() {
-  // Profesyonel e-ticaret kategorileri
   const kategoriler = [
     { id: 1, ad: 'Yeni Gelenler', ikon: '✨' },
     { id: 2, ad: 'Kadın Giyim', ikon: '👗' },
@@ -12,10 +11,8 @@ function Kategori() {
     { id: 7, ad: 'İndirim/Sale', ikon: '🏷️' }
   ];
 
-  const kategoriSec = (ad) => {
-    console.log(`${ad} kategorisi filtreleniyor...`);
-    // Buraya ileride Backend'den o kategoriye ait ürünleri getiren fetch eklenebilir.
-    alert(`${ad} kategorisi yakında listelenecek!`);
+  const kategoriSec = (api) => {
+    setSelectedCategory(api);
   };
 
   return (
@@ -25,7 +22,7 @@ function Kategori() {
           <button 
             key={kat.id} 
             className="category-pill"
-            onClick={() => kategoriSec(kat.ad)}
+            onClick={() => kategoriSec(kat.api)}
           >
             <span className="cat-icon">{kat.ikon}</span>
             <span className="cat-name">{kat.ad}</span>
