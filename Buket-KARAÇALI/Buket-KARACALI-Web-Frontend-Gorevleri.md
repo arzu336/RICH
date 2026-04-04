@@ -1,7 +1,6 @@
 # Buket Karaçalı'nın Web Frontend Görevleri
 
-**Front-end Test Videosu:** [Video Linki Buraya Gelecek]
-
+**Front-end Test Videosu:** [https://youtube.com/shorts/K-TmMS0YWvU?si=hFgkEy0zl7LwvijJ]
 
 ---
 
