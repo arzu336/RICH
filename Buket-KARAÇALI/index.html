@@ -1,0 +1,32 @@
+<section id="filters">
+    <select id="sizeFilter">
+        <option value="">Beden Seç (Tümü)</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+    </select>
+
+    <select id="colorFilter">
+        <option value="">Renk Seç (Tümü)</option>
+        <option value="Red">Kırmızı</option>
+        <option value="Blue">Mavi</option>
+        <option value="Black">Siyah</option>
+    </select>
+</section>
+
+<section id="add-product">
+    <h3>Yeni Ürün Ekle</h3>
+    <input type="text" id="pName" placeholder="Ürün Adı">
+    <input type="number" id="pPrice" placeholder="Fiyat">
+    <input type="file" id="pImage"> <button onclick="addProduct()">Ürünü Kaydet</button>
+</section>
+
+<div id="product-container">
+    <h2>Ürünler</h2>
+    <div id="productList"></div>
+</div>
+
+<div id="cart-container">
+    <h2>Sepetim</h2>
+    <div id="cartList"></div>
+</div>
