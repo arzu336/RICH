@@ -45,6 +45,18 @@ function UrunDetay({ selectedCategory }) {
         </form>
       </div>
 
+      <div className="sort-container mb-4" style={{ textAlign: 'right' }}>
+        <select 
+          className="form-select d-inline-block w-auto" 
+          onChange={(e) => handleSort(e.target.value)}
+          style={{ padding: '8px', borderRadius: '8px', border: '1px solid #ccc', cursor: 'pointer' }}
+        >
+          <option value="">Sırala: Varsayılan</option>
+          <option value="asc">Fiyat: En Düşük</option>
+          <option value="desc">Fiyat: En Yüksek</option>
+        </select>
+      </div>
+
       {/* Maddeler 3 & 4: Filtreleme */}
       <div style={{ marginBottom: '20px' }}>
         <select onChange={e => setFRenk(e.target.value)}>
