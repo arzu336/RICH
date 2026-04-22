@@ -1,7 +1,16 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/rojdaayldz/RICH'
+            }
+        }
 
         stage('Build Backend') {
             steps {
