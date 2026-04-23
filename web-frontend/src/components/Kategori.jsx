@@ -1,31 +1,24 @@
-import React from 'react';
+import React from "react";
 
 function Kategori({ setSelectedCategory }) {
   const kategoriler = [
-    { id: 1, ad: 'Kadın Giyim', ikon: '👗', api: 'kadin' },
-    { id: 2, ad: 'Erkek Giyim', ikon: '👔', api: 'erkek' },
-    { id: 3, ad: 'Bebek', ikon: '🍼', api: 'bebek' },
-    { id: 4, ad: 'Aksesuar', ikon: '👜', api: 'aksesuar' }
+    { id: 1, ad: "Kadın Giyim", api: "kadin" },
+    { id: 2, ad: "Erkek Giyim", api: "erkek" },
+    { id: 3, ad: "Bebek", api: "bebek" },
+    { id: 4, ad: "Aksesuar", api: "aksesuar" },
   ];
 
-  const kategoriSec = (api) => {
-    setSelectedCategory(api);
-  };
-
   return (
-    <div className="category-section">
-      <div className="category-container">
-        {kategoriler.map((kat) => (
-          <button 
-            key={kat.id} 
-            className="category-pill"
-            onClick={() => kategoriSec(kat.api)}
-          >
-            <span className="cat-icon">{kat.ikon}</span>
-            <span className="cat-name">{kat.ad}</span>
-          </button>
-        ))}
-      </div>
+    <div className="kategori-container">
+      {kategoriler.map((kat) => (
+        <button
+          key={kat.id}
+          className="kategori-button"
+          onClick={() => setSelectedCategory(kat.api)}
+        >
+          {kat.ad}
+        </button>
+      ))}
     </div>
   );
 }

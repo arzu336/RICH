@@ -10,6 +10,7 @@ namespace RichBackend.Models
         public DbSet<AddressRequest> Addresses { get; set; }
         public DbSet<FavoriteRequest> Favorites { get; set; }
         public DbSet<Product> Products { get; set; } 
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

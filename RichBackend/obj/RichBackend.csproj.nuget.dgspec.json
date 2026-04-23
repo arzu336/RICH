@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rojda YILDIZ\\Desktop\\RICH-main\\RichBackend\\RichBackend.csproj": {}
+    "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rojda YILDIZ\\Desktop\\RICH-main\\RichBackend\\RichBackend.csproj": {
+    "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rojda YILDIZ\\Desktop\\RICH-main\\RichBackend\\RichBackend.csproj",
+        "projectUniqueName": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj",
         "projectName": "RichBackend",
-        "projectPath": "C:\\Users\\Rojda YILDIZ\\Desktop\\RICH-main\\RichBackend\\RichBackend.csproj",
-        "packagesPath": "C:\\Users\\Rojda YILDIZ\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rojda YILDIZ\\Desktop\\RICH-main\\RichBackend\\obj\\",
+        "projectPath": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj",
+        "packagesPath": "C:\\Users\\sahip\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Rojda YILDIZ\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sahip\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,7 +39,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -81,6 +82,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.25, 8.0.25]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.25, 8.0.25]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.25, 8.0.25]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.25, 8.0.25]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -89,7 +108,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

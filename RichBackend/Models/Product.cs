@@ -8,5 +8,7 @@ namespace RichBackend.Models
         public string Category { get; set; } = string.Empty;
         public int Stok { get; set; }
         public string Image { get; set; } = string.Empty;
+        public string Renk { get; set; } = string.Empty;
+        public string Beden { get; set; } = string.Empty;
     }
 }

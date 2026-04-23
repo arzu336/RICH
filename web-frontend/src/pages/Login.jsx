@@ -7,10 +7,10 @@ const Login = ({ setActiveTab }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const success = login(email, password);
+    const success = await login(email, password);
 
     if (success) {
       setActiveTab("hesabim");

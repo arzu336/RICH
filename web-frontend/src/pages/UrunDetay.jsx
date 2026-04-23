@@ -1,17 +1,32 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { useEffect } from "react";
 
 function UrunDetay({ selectedCategory }) {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        let url = "http://localhost:5227/api/products";
+
+        if (selectedCategory) {
+          url += `?category=${selectedCategory}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        setUrunler(data);
+      } catch (err) {
+        console.error("Ürün çekme hatası:", err);
+      }
+    };
+
+  fetchProducts();
+}, [selectedCategory]);
   const { addToCart } = useContext(AuthContext);
   
   // Ürün Listesi (Stok, Renk ve Beden bilgileriyle birlikte)
-  const [urunler, setUrunler] = useState([
-    { id: 101, ad: 'Elegant Lacivert Elbise', fiyat: 1250, resim: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b', stok: 5, kategori: 'kadin', renk: 'Lacivert', beden: 'M' },
-    { id: 102, ad: 'Klasik Siyah Deri Ceket', fiyat: 2800, resim: 'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504', stok: 2, kategori: 'erkek', renk: 'Siyah', beden: 'L' },
-    { id: 103, ad: 'Siyah Şık El Çantası', fiyat: 950, resim: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3', stok: 0, kategori: 'aksesuar', renk: 'Siyah', beden: 'Standart' },
-    { id: 104, ad: 'Modern Kesim Erkek Takım', fiyat: 3500, resim: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35', stok: 10, kategori: 'erkek', renk: 'Gri', beden: 'XL' },
-    { id: 105, ad: 'Pamuklu Bebek Tulum Seti', fiyat: 450, resim: 'https://images.unsplash.com/photo-1522771935878-3a0373d4fe84', stok: 12, kategori: 'bebek', renk: 'Beyaz', beden: '0-3 Ay' },
-  ]);
+  const [urunler, setUrunler] = useState([]);
 
   // Senin Gereksinimlerin: Ekleme ve Filtreleme State'leri
   const [yeni, setYeni] = useState({ ad: '', fiyat: '', resim: '', kategori: 'kadin', renk: '', beden: '' });
@@ -51,13 +66,15 @@ function UrunDetay({ selectedCategory }) {
     }
   };
 
-  // Birleşik Filtreleme Mantığı (Kategori + Renk + Beden)
   const filtered = urunler.filter(u => {
-    const katMatch = selectedCategory ? u.kategori?.toLowerCase() === selectedCategory.toLowerCase() : true;
-    const renkMatch = fRenk ? u.renk === fRenk : true;
-    const bedenMatch = fBeden ? u.beden === fBeden : true;
-    return katMatch && renkMatch && bedenMatch;
-  });
+  const kategori = u.kategori || u.category;
+
+  const katMatch = selectedCategory
+    ? kategori?.toLowerCase() === selectedCategory.toLowerCase()
+    : true;
+
+  return katMatch;
+});
 
   return (
     <div style={{ padding: '20px' }}>
@@ -115,8 +132,8 @@ function UrunDetay({ selectedCategory }) {
             {/* ARKADAŞININ GEREKSİNİMİ: FOTOĞRAF FİLTRESİ VE STOK UYARILARI */}
             <div style={{ position: 'relative', height: '200px', overflow: 'hidden', borderRadius: '8px' }}>
               <img 
-                src={u.resim} 
-                alt={u.ad} 
+                src={u.resim || u.image} 
+                alt={u.ad || u.name} 
                 style={{ width: '100%', height: '100%', objectFit: 'cover', filter: u.stok === 0 ? 'grayscale(100%)' : 'none' }} 
               />
               
@@ -134,10 +151,10 @@ function UrunDetay({ selectedCategory }) {
             </div>
 
             <div style={{ marginTop: '10px', textAlign: 'center' }}>
-              <h5 style={{ fontSize: '16px', margin: '5px 0' }}>{u.ad}</h5>
-              <p style={{ fontSize: '14px', color: '#666' }}>{u.renk} | {u.beden}</p>
-              <p style={{ fontWeight: 'bold', color: '#1e3a8a' }}>{u.fiyat.toLocaleString('tr-TR')} TL</p>
-              
+              <h5 style={{ fontSize: '16px', margin: '5px 0' }}>{u.ad || u.name}</h5>
+              <p style={{ fontSize: '14px', color: '#666' }}>{u.renk || u.color} | {u.beden || u.size}</p>
+              <p style={{ fontWeight: 'bold', color: '#1e3a8a' }}>{(u.fiyat || u.price)?.toLocaleString('tr-TR')} TL</p>
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                 <button 
                   onClick={() => addToCart(u)} 
