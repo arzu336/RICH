@@ -1,39 +1,24 @@
 pipeline {
     agent any
-
-    options {
-        skipDefaultCheckout(true)
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Docker Build ve Run') {
             steps {
-                git branch: 'main', url: 'https://github.com/rojdaayldz/RICH'
-            }
-        }
+                script {
+                    // 1. Varsa eski konteynerleri durdur ve temizle (Hata almamak için)
+                    sh 'docker stop api-container frontend-container || true'
+                    sh 'docker rm api-container frontend-container || true'
 
-        stage('Build Backend') {
-            steps {
-                dir('RichBackend') {
-                    sh 'docker build -t rich-backend .'
+                    // 2. API'yi Build et ve 5000 portunda çalıştır
+                    // -f ile hangi Dockerfile'ı kullanacağını söylüyoruz
+                    sh 'docker build -f Dockerfile.api -t rich-api-image .'
+                    sh 'docker run -d --name api-container -p 5000:5000 rich-api-image'
+
+                    // 3. Frontend'i Build et ve 80 portunda çalıştır
+                    dir('web-frontend') {
+                        sh 'docker build -t rich-frontend-image .'
+                        sh 'docker run -d --name frontend-container -p 80:80 rich-frontend-image'
+                    }
                 }
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                dir('web-frontend') {
-                    sh 'docker build -t rich-frontend .'
-                }
-            }
-        }
-
-        stage('Run Containers') {
-            steps {
-                sh 'docker rm -f backend || true'
-                sh 'docker rm -f frontend || true'
-                sh 'docker run -d -p 8080:8080 --name backend rich-backend'
-                sh 'docker run -d -p 5173:5173 --name frontend rich-frontend'
             }
         }
     }
