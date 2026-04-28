@@ -1,151 +1,551 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap');
+
 :root {
-  --primary: #1e3a8a; /* Kurumsal Lacivert */
-  --accent: #fbbf24;  /* Altın Sarısı */
-  --bg: #f9fafb;
+  --navy-darkest: #060b14;
+  --navy-dark:    #0a0f1e;
+  --navy-mid:     #0d1526;
+  --navy-light:   #111f3a;
+  --navy-border:  #1e2d4a;
+  --navy-hover:   #162035;
+
+  --gold:         #c8a96e;
+  --gold-light:   #ddc48e;
+
+  --text-primary:   #f0f0f0;
+  --text-secondary: #a0aec0;
+  --text-muted:     #4a5568;
+
+  --white: #ffffff;
+  --danger: #e57373;
+  --success: #68d391;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'Jost', sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --transition: all 0.2s ease;
 }
 
-body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--navy-dark);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =====================
+   LAYOUT
+   ===================== */
+
+.rich-shop-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-modern {
+  flex: 1;
+  background: var(--navy-dark);
+}
+
+/* =====================
+   NAVBAR
+   ===================== */
 
 .navbar-modern {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 8%; background: white; position: sticky; top: 0; z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--navy-darkest);
+  border-bottom: 1px solid var(--navy-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 68px;
+  gap: 24px;
 }
 
-.logo-section { font-size: 1.8rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; }
-
-.nav-links-modern button, .dropbtn-modern {
-  background: none !important; border: none !important; color: #374151 !important;
-  font-weight: 600; cursor: pointer; padding: 10px 15px; transition: 0.3s;
+.logo-section {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 8px;
+  color: var(--white);
+  text-transform: uppercase;
+  flex-shrink: 0;
 }
 
-.nav-links-modern button:hover { color: var(--primary) !important; }
+.nav-links-modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-/* Ürün Kartları Stili */
-.product-showcase { padding: 40px 8%; }
-.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+.nav-links-modern button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  white-space: nowrap;
+}
 
-.modern-product-card { background: white; border-radius: 12px; overflow: hidden; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-.modern-product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.nav-links-modern button:hover {
+  color: var(--white);
+  background: var(--navy-light);
+}
 
-.card-image-wrapper { height: 300px; overflow: hidden; }
-.card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-
-.card-info { padding: 15px; text-align: center; }
-.add-to-cart-btn {
-  width: 100%; padding: 10px; background: var(--primary) !important;
-  color: white !important; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
+.nav-links-modern span {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  white-space: nowrap;
 }
 
 /* Dropdown */
-.dropdown-modern { position: relative; display: inline-block; }
-.dropdown-content-modern {
-  display: none; position: absolute; background: white; min-width: 150px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1); border-radius: 8px;
+.dropdown-modern {
+  position: relative;
 }
-.dropdown-modern:hover .dropdown-content-modern { display: block; }
-.dropdown-content-modern a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
 
-/* MADDE 3: Favori (Kalp) Butonu Tasarımı */
-.wishlist-btn {
+.dropdown-content-modern {
+  display: none;
   position: absolute;
-  top: 15px; /* Resmin üstünden boşluk */
-  right: 15px; /* Resmin sağından boşluk */
-  background: white !important; /* Beyaz yuvarlak arka plan */
-  border: none !important;
-  border-radius: 50% !important; /* Tam yuvarlak */
-  padding: 10px !important;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--navy-darkest);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-md);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.dropdown-modern:hover .dropdown-content-modern {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-content-modern button {
+  width: 100%;
+  text-align: left;
+  border-radius: 0 !important;
+  padding: 12px 20px !important;
+  border-bottom: 1px solid var(--navy-border);
+}
+
+.dropdown-content-modern button:last-child {
+  border-bottom: none;
+}
+
+/* Nav right */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cart-icon-btn {
+  background: none;
+  border: 1px solid var(--navy-border);
+  color: var(--text-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  opacity: 0.8; /* Hafif şeffaf */
-  transition: all 0.3s ease !important;
-  z-index: 10; /* Resmin üstünde durması için */
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: var(--transition);
 }
 
-/* Mouse ile üzerine gelince */
-.wishlist-btn:hover {
-  opacity: 1; /* Tam görünür olur */
-  transform: scale(1.1); /* Hafifçe büyür (Optimistic UI Update hissi) */
-  background: #fdf2f8 !important; /* Hafif pembe arka plan */
+.cart-icon-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
-/* Kırmızı kalp efekti (Eğer seçiliyse) */
-.wishlist-btn.active {
-  color: #e11d48 !important; /* Kırmızı renk */
-}
+/* =====================
+   SEARCH
+   ===================== */
 
-/* MADDE 5: Arama Motoru Stilleri */
 .search-wrapper {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  position: relative;
 }
 
 .search-bar-container {
   display: flex;
-  background: white;
-  border-radius: 50px;
-  padding: 5px 15px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  align-items: center;
+  background: var(--navy-mid);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
 .search-input {
+  background: none;
   border: none;
-  flex: 1;
-  padding: 10px;
   outline: none;
-  font-size: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 9px 14px;
+  width: 200px;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-btn {
-  background: none !important;
-  border: none !important;
-  font-size: 1.2rem;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--navy-border);
+  color: var(--text-muted);
+  padding: 9px 12px;
   cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.search-btn:hover {
+  color: var(--gold);
 }
 
 .search-info-text {
-  margin-top: 10px;
-  font-size: 13px;
-  color: #1e3a8a; /* Kurumsal lacivert */
-  font-weight: 500;
-  text-align: center;
-  animation: fadeIn 0.3s ease;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--navy-darkest);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  z-index: 100;
+  white-space: nowrap;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* =====================
+   KATEGORİ BUTONLARI
+   ===================== */
 
-
-/* MADDE 8: Sıralama Menüsü Konumlandırma */
-.sort-container {
+.kategori-container {
   display: flex;
-  justify-content: flex-end; /* Sağa yaslar */
-  margin-bottom: 25px;
-  padding-right: 10px;
+  border-bottom: 1px solid var(--navy-border);
+  background: var(--navy-darkest);
+  padding: 0 40px;
 }
 
-.sort-select {
-  padding: 10px 15px !important;
-  border-radius: 12px !important;
-  border: 1px solid #e2e8f0 !important;
-  background-color: white !important;
-  color: #1e293b !important;
-  font-weight: 600;
+.kategori-button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  outline: none;
-  transition: all 0.3s ease;
+  padding: 16px 20px;
+  transition: var(--transition);
 }
 
-.sort-select:hover {
-  border-color: #1e3a8a !important; /* Kurumsal lacivert */
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.kategori-button:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--navy-border);
+}
+
+.kategori-button.active,
+.kategori-button:focus {
+  color: var(--white);
+  border-bottom-color: var(--gold);
+  outline: none;
+}
+
+/* =====================
+   ÜRÜN KARTLARI
+   ===================== */
+
+.modern-product-card {
+  background: var(--navy-mid) !important;
+  border: 1px solid var(--navy-border) !important;
+  border-radius: var(--radius-md) !important;
+  transition: var(--transition) !important;
+}
+
+.modern-product-card:hover {
+  background: var(--navy-light) !important;
+  border-color: var(--gold) !important;
+}
+
+/* =====================
+   CHECKOUT LAYOUT
+   ===================== */
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1px;
+  background: var(--navy-border);
+  min-height: 80vh;
+}
+
+.checkout-layout > * {
+  background: var(--navy-dark);
+  padding: 32px;
+}
+
+/* =====================
+   PROFİL LAYOUT
+   ===================== */
+
+.profile-layout {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =====================
+   FORM ELEMENLERİ (Global)
+   ===================== */
+
+.form-control {
+  background: var(--navy-mid) !important;
+  border: 1px solid var(--navy-border) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  padding: 10px 14px !important;
+  width: 100%;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--gold) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.form-select {
+  background: var(--navy-mid) !important;
+  border: 1px solid var(--navy-border) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  padding: 10px 14px !important;
+  cursor: pointer;
+}
+
+/* =====================
+   BUTONLAR (Global)
+   ===================== */
+
+.btn {
+  font-family: var(--font-sans) !important;
+  font-size: 11px !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  border-radius: var(--radius-sm) !important;
+  cursor: pointer;
+  transition: var(--transition) !important;
+}
+
+.btn-primary {
+  background: var(--white) !important;
+  color: var(--navy-dark) !important;
+  border: none !important;
+}
+
+.btn-primary:hover {
+  background: var(--gold) !important;
+  color: var(--navy-darkest) !important;
+}
+
+.btn-primary:disabled {
+  background: var(--navy-border) !important;
+  color: var(--text-muted) !important;
+  cursor: not-allowed !important;
+}
+
+.btn-outline-danger {
+  background: none !important;
+  border: 1px solid var(--navy-border) !important;
+  color: var(--text-muted) !important;
+}
+
+.btn-outline-danger:hover {
+  border-color: var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+.btn-success {
+  background: var(--gold) !important;
+  color: var(--navy-darkest) !important;
+  border: none !important;
+}
+
+.btn-success:hover {
+  background: var(--gold-light) !important;
+}
+
+/* =====================
+   GİRİŞ / KAYIT SAYFALARI
+   ===================== */
+
+.login-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--navy-dark);
+}
+
+/* =====================
+   FOOTER
+   ===================== */
+
+.footer-modern {
+  background: var(--navy-darkest);
+  border-top: 1px solid var(--navy-border);
+  padding: 24px 40px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* =====================
+   SCROLL
+   ===================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--navy-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--navy-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* =====================
+   BADGE
+   ===================== */
+
+.badge {
+  font-family: var(--font-sans) !important;
+  font-size: 10px !important;
+  letter-spacing: 1px !important;
+}
+
+.bg-primary {
+  background: var(--navy-light) !important;
+  color: var(--gold) !important;
+  border: 1px solid var(--navy-border);
+}
+
+/* =====================
+   SPINNER
+   ===================== */
+
+.spinner-border {
+  color: var(--gold) !important;
+}
+
+/* =====================
+   CARD (Bootstrap override)
+   ===================== */
+
+.card {
+  background: var(--navy-mid) !important;
+  border: 1px solid var(--navy-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.bg-light {
+  background: var(--navy-light) !important;
+}
+
+.bg-white {
+  background: var(--navy-mid) !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+}
+
+.text-primary {
+  color: var(--gold) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-dark {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.border {
+  border-color: var(--navy-border) !important;
+}
+
+.border-0 {
+  border: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--text-primary);
 }
