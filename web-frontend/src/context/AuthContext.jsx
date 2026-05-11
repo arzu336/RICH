@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-const API_URL = "https://rich-production-8ae5.up.railway.app/api/auth";
+const API_URL = "https://efficient-energy-production-b18f.up.railway.app/api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {

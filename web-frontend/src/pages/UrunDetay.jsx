@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const API_URL = "https://rich-production-8ae5.up.railway.app/api/products";
+const API_URL = "https://efficient-energy-production-b18f.up.railway.app/api/products";
 
 // Shimmer / Skeleton kart bileşeni
 const SkeletonCard = () => (

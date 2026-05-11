@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RichBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ddd75bb93d9397fa21bf225fd72ee0d184c640fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1991651a8ca9f8f15d6962ee7b5381cf8b54941f")]
 [assembly: System.Reflection.AssemblyProductAttribute("RichBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RichBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
