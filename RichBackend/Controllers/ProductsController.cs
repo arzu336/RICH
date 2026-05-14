@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RichBackend.Models;
+using RichBackend.Services;
 
 namespace RichBackend.Controllers
 {
@@ -8,10 +9,12 @@ namespace RichBackend.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly RichContext _context;
+        private readonly IEventPublisher _eventPublisher;
 
-        public ProductsController(RichContext context)
+        public ProductsController(RichContext context, IEventPublisher eventPublisher)
         {
             _context = context;
+            _eventPublisher = eventPublisher;
         }
 
         [HttpGet]
@@ -56,6 +59,12 @@ namespace RichBackend.Controllers
             {
                 products = products.Where(p => p.Category == category).ToList();
             }
+
+            _eventPublisher.Publish("products.listed", new
+            {
+                category = category ?? "all",
+                count = products.Count
+            });
 
             return Ok(products);
         }

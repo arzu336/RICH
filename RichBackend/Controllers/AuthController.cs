@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RichBackend.Models;
+using RichBackend.Services;
 
 namespace RichBackend.Controllers
 {
@@ -7,29 +8,43 @@ namespace RichBackend.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private static List<User> users = new List<User>();
+        private static readonly List<User> Users = new();
+        private readonly IEventPublisher _eventPublisher;
+
+        public AuthController(IEventPublisher eventPublisher)
+        {
+            _eventPublisher = eventPublisher;
+        }
 
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
-            var existingUser = users.FirstOrDefault(u => u.Email == request.Email);
+            var existingUser = Users.FirstOrDefault(u => u.Email == request.Email);
 
             if (existingUser != null)
-                return BadRequest("Bu e-posta adresi zaten kayıtlı.");
+            {
+                return BadRequest("Bu e-posta adresi zaten kayitli.");
+            }
 
             var user = new User
             {
-                Id = users.Count + 1,
+                Id = Users.Count + 1,
                 FullName = request.FullName,
                 Email = request.Email,
                 Password = request.Password
             };
 
-            users.Add(user);
+            Users.Add(user);
+            _eventPublisher.Publish("user.registered", new
+            {
+                user.Id,
+                user.FullName,
+                user.Email
+            });
 
             return Ok(new
             {
-                message = "Kayıt başarılı.",
+                message = "Kayit basarili.",
                 userId = user.Id,
                 fullName = user.FullName,
                 email = user.Email
@@ -39,16 +54,25 @@ namespace RichBackend.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
-            var user = users.FirstOrDefault(u =>
+            var user = Users.FirstOrDefault(u =>
                 u.Email == request.Email &&
                 u.Password == request.Password);
 
             if (user == null)
-                return Unauthorized("E-posta veya şifre hatalı.");
+            {
+                return Unauthorized("E-posta veya sifre hatali.");
+            }
+
+            _eventPublisher.Publish("user.logged_in", new
+            {
+                user.Id,
+                user.FullName,
+                user.Email
+            });
 
             return Ok(new
             {
-                message = "Giriş başarılı.",
+                message = "Giris basarili.",
                 userId = user.Id,
                 fullName = user.FullName,
                 email = user.Email
@@ -58,18 +82,31 @@ namespace RichBackend.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            return Ok(new { message = "Çıkış başarılı." });
+            _eventPublisher.Publish("user.logged_out", new
+            {
+                message = "User logout endpoint called"
+            });
+
+            return Ok(new { message = "Cikis basarili." });
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteAccount(int id)
         {
-            var user = users.FirstOrDefault(u => u.Id == id);
+            var user = Users.FirstOrDefault(u => u.Id == id);
 
             if (user == null)
-                return NotFound("Kullanıcı bulunamadı.");
+            {
+                return NotFound("Kullanici bulunamadi.");
+            }
 
-            users.Remove(user);
+            Users.Remove(user);
+            _eventPublisher.Publish("user.deleted", new
+            {
+                user.Id,
+                user.FullName,
+                user.Email
+            });
 
             return Ok(new { message = "Hesap silindi." });
         }

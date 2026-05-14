@@ -1,62 +1,75 @@
-# Ali Tutar'ın Mobil Backend Görevleri
-**Mobil Front-end ile Back-end Bağlanmış Test Videosu:** [Link buraya eklenecek](https://example.com)
+# Arzu KUCUK Mobil Backend Gorevleri
 
-## 1. Üye Olma (Kayıt) Servisi
+**Mobil Front-end ile Back-end Baglanmis Test Videosu:** [Link buraya eklenecek](https://example.com)
+
+Bu sayfada Arzu KUCUK tarafindan mobil uygulamadan REST API'ye baglanarak gerceklestirilen backend entegrasyon gorevleri yer almaktadir.
+
+**Tamamlanan Gereksinim Sayisi:** 8 / 8
+
+**Mobil Calisma Sekli:** Mobil kanit videosunda uygulama telefon uzerinden PWA olarak acilir ve REST API istekleri Vercel API endpointleri uzerinden gosterilir.
+
+## 1. Kullanici Kayit Servisi
 - **API Endpoint:** `POST /auth/register`
-- **Görev:** Mobil uygulamada kullanıcı kayıt işlemini gerçekleştiren servis entegrasyonu
-- **İşlevler:**
-  - Kullanıcı bilgilerini (email, password, firstName, lastName) toplama
-  - Form validasyonu (email formatı, şifre güvenliği kontrolü)
-  - API'ye POST isteği gönderme
-  - Başarılı kayıt durumunda kullanıcıyı giriş ekranına yönlendirme
-  - Hata durumlarını yakalama ve kullanıcıya gösterilmesi (409 Conflict, 400 Bad Request)
-- **Teknik Detaylar:**
-  - HTTP Client kullanımı (Retrofit/OkHttp - Android, URLSession/Alamofire - iOS)
-  - Request/Response model sınıfları oluşturma
-  - Error handling ve retry mekanizması
-  - Loading state yönetimi
+- **Gorev:** Mobil uygulamadaki kayit formundan gelen kullanici bilgilerini REST API'ye gondermek.
+- **Request Body:**
+  ```json
+  {
+    "fullName": "Arzu Kucuk",
+    "email": "arzu@example.com",
+    "password": "Guvenli123"
+  }
+  ```
+- **Basarili Sonuc:** Kullanici olusturulur ve basarili kayit mesaji doner.
+- **Kanit Videosunda Gosterilecek:** Mobil uygulamadan kayit istegi gonderilir, API cevabi alinir ve ekranda basarili sonuc gosterilir.
 
-## 2. Kullanıcı Bilgilerini Görüntüleme Servisi
-- **API Endpoint:** `GET /users/{userId}`
-- **Görev:** Kullanıcı profil bilgilerini API'den çekip mobil uygulamada gösterme
-- **İşlevler:**
-  - JWT token ile kimlik doğrulama
-  - Kullanıcı ID'sini kullanarak profil bilgilerini getirme
-  - Gelen veriyi parse edip UI'da gösterme
-  - Token süresi dolmuşsa refresh token ile yenileme
-  - Offline durumda cache'den veri gösterme
-- **Teknik Detaylar:**
-  - Authentication header ekleme (Bearer Token)
-  - Response caching stratejisi
-  - Token refresh mekanizması
-  - Error handling (401 Unauthorized, 403 Forbidden, 404 Not Found)
+## 2. Kullanici Giris Servisi
+- **API Endpoint:** `POST /auth/login`
+- **Gorev:** Mobil uygulamadaki giris formundan gelen email ve parola bilgilerini REST API'ye gondermek.
+- **Request Body:**
+  ```json
+  {
+    "email": "arzu@example.com",
+    "password": "Guvenli123"
+  }
+  ```
+- **Basarili Sonuc:** Kullanici bilgileri doner ve oturum acilir.
+- **Kanit Videosunda Gosterilecek:** Mobil uygulamadan giris istegi gonderilir, API cevabi alinir ve kullanici hesabina gecis yapilir.
 
-## 3. Kullanıcı Bilgilerini Güncelleme Servisi
-- **API Endpoint:** `PUT /users/{userId}`
-- **Görev:** Kullanıcı profil bilgilerini güncelleme işlemini gerçekleştirme
-- **İşlevler:**
-  - Profil düzenleme ekranından gelen verileri toplama
-  - Form validasyonu (email formatı, telefon formatı vb.)
-  - API'ye PUT isteği gönderme
-  - Başarılı güncelleme sonrası cache'i güncelleme
-  - Optimistic UI update (kullanıcı deneyimini iyileştirme)
-- **Teknik Detaylar:**
-  - Request body oluşturma (firstName, lastName, email, phone)
-  - Partial update desteği (yalnızca değişen alanları gönderme)
-  - Conflict resolution (eşzamanlı güncelleme durumları)
-  - Error handling ve kullanıcı bildirimleri
+## 3. Kullanici Cikis Servisi
+- **API Endpoint:** `POST /auth/logout`
+- **Gorev:** Mobil uygulamadaki oturumu kapatma islemini REST API ile gerceklestirmek.
+- **Basarili Sonuc:** Cikis basarili mesaji doner ve oturum bilgisi temizlenir.
+- **Kanit Videosunda Gosterilecek:** Cikis istegi gonderilir, kullanici oturumu kapatilir ve giris ekranina donulur.
 
-## 4. Kullanıcı Silme Servisi
-- **API Endpoint:** `DELETE /users/{userId}`
-- **Görev:** Kullanıcı hesabını silme işlemini gerçekleştirme
-- **İşlevler:**
-  - Kullanıcıya silme işlemi için onay dialog'u gösterme
-  - API'ye DELETE isteği gönderme
-  - Başarılı silme sonrası local storage ve cache'i temizleme
-  - Kullanıcıyı login ekranına yönlendirme
-  - Token'ı geçersiz kılma
-- **Teknik Detaylar:**
-  - Destructive action için confirmation dialog
-  - Local data cleanup (SharedPreferences/UserDefaults, cache, database)
-  - Logout işlemi entegrasyonu
-  - Error handling (401, 403, 404)
+## 4. Kullanici Hesap Silme Servisi
+- **API Endpoint:** `DELETE /auth/delete/{id}`
+- **Gorev:** Mobil uygulamadan kullanici hesabini silme istegini REST API'ye gondermek.
+- **Path Parametresi:**
+  - `id`: Silinecek kullanicinin ID degeri
+- **Basarili Sonuc:** Kullanici hesabi silinir ve oturum bilgisi temizlenir.
+- **Kanit Videosunda Gosterilecek:** Hesap silme onayi verilir, DELETE istegi gonderilir ve islemin tamamlandigi gosterilir.
+
+## 5. Kadin Urunleri Listeleme Servisi
+- **API Endpoint:** `GET /products?category=kadin`
+- **Gorev:** Kadin kategorisindeki urunleri REST API'den cekmek.
+- **Basarili Sonuc:** Kadin urunleri JSON olarak doner ve mobil arayuzde listelenir.
+- **Kanit Videosunda Gosterilecek:** Kadin kategorisi secilir, API istegi gider ve gelen urunler ekranda listelenir.
+
+## 6. Erkek Urunleri Listeleme Servisi
+- **API Endpoint:** `GET /products?category=erkek`
+- **Gorev:** Erkek kategorisindeki urunleri REST API'den cekmek.
+- **Basarili Sonuc:** Erkek urunleri JSON olarak doner ve mobil arayuzde listelenir.
+- **Kanit Videosunda Gosterilecek:** Erkek kategorisi secilir, API istegi gider ve gelen urunler ekranda listelenir.
+
+## 7. Bebek Urunleri Listeleme Servisi
+- **API Endpoint:** `GET /products?category=bebek`
+- **Gorev:** Bebek kategorisindeki urunleri REST API'den cekmek.
+- **Basarili Sonuc:** Bebek urunleri JSON olarak doner ve mobil arayuzde listelenir.
+- **Kanit Videosunda Gosterilecek:** Bebek kategorisi secilir, API istegi gider ve gelen urunler ekranda listelenir.
+
+## 8. Aksesuar Urunleri Listeleme Servisi
+- **API Endpoint:** `GET /products?category=aksesuar`
+- **Gorev:** Aksesuar kategorisindeki urunleri REST API'den cekmek.
+- **Basarili Sonuc:** Aksesuar urunleri JSON olarak doner ve mobil arayuzde listelenir.
+- **Kanit Videosunda Gosterilecek:** Aksesuar kategorisi secilir, API istegi gider ve gelen urunler ekranda listelenir.
+

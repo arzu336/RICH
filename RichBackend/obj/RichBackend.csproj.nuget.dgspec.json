@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj": {}
+    "D:\\RICH\\RichBackend\\RichBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj": {
+    "D:\\RICH\\RichBackend\\RichBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj",
+        "projectUniqueName": "D:\\RICH\\RichBackend\\RichBackend.csproj",
         "projectName": "RichBackend",
-        "projectPath": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\RichBackend.csproj",
+        "projectPath": "D:\\RICH\\RichBackend\\RichBackend.csproj",
         "packagesPath": "C:\\Users\\sahip\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sahip\\Desktop\\RICH\\RichBackend\\obj\\",
+        "outputPath": "D:\\RICH\\RichBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sahip\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -65,6 +65,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.8.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
