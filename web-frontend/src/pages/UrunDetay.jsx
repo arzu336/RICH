@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const API_URL = "https://efficient-energy-production-b18f.up.railway.app/api/products";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "");
+const API_URL = `${API_BASE_URL}/api/products`;
 
 // Shimmer / Skeleton kart bileşeni
 const SkeletonCard = () => (

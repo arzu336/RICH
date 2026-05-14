@@ -3,6 +3,9 @@ using RichBackend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5227";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // 1. SWAGGER VE API AYARLARI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
