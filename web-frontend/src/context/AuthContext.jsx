@@ -48,9 +48,7 @@ const register = async (name, email, password) => {
 
       if (!response.ok) return false;
 
-      const data = await response.json(); // { message, userId, fullName, email }
-      localStorage.setItem("user", JSON.stringify(data)); // tarayıcıya kaydet
-      setUser(data); // state'e yaz, sayfa yenilenince kaybolmaz
+      await response.json();
       return true;
 
     } catch (error) {
