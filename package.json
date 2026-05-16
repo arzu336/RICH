@@ -1,0 +1,24 @@
+{
+  "name": "rich",
+  "version": "1.0.0",
+  "description": "![RICH Tanıtım Görseli](rich.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arzu336/RICH.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/arzu336/RICH/issues"
+  },
+  "homepage": "https://github.com/arzu336/RICH#readme",
+  "dependencies": {
+    "mongodb": "^7.2.0"
+  }
+}

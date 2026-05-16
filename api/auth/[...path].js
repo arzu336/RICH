@@ -1,103 +1,62 @@
-const store = globalThis.richAuthStore || {
-  nextId: 1,
-  users: [],
-};
+import { MongoClient } from "mongodb";
 
-globalThis.richAuthStore = store;
+const uri = process.env.MONGODB_URI;
+let client;
 
-function readBody(request) {
-  if (request.body && typeof request.body === 'object') {
-    return request.body;
+async function getDb() {
+  if (!client) {
+    client = new MongoClient(uri);
+    await client.connect();
   }
-
-  return {};
+  return client.db("rich").collection("users");
 }
 
-export default function handler(request, response) {
+export default async function handler(request, response) {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (request.method === "OPTIONS") { response.status(204).end(); return; }
+
   const path = request.query.path || [];
   const action = path[0];
-  const id = path[1];
+  const users = await getDb();
 
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (request.method === 'OPTIONS') {
-    response.status(204).end();
-    return;
-  }
-
-  if (action === 'register' && request.method === 'POST') {
-    const body = readBody(request);
-    const email = String(body.email || '').trim().toLowerCase();
-    const password = String(body.password || '');
-    const fullName = String(body.fullName || '').trim();
-
+  if (action === "register" && request.method === "POST") {
+    const { email, password, fullName } = request.body || {};
     if (!email || !password || !fullName) {
-      response.status(400).json({ message: 'Gecersiz veri.' });
-      return;
+      response.status(400).json({ message: "Gecersiz veri." }); return;
     }
-
-    if (store.users.some((user) => user.email === email)) {
-      response.status(409).json({ message: 'Bu e-posta adresi zaten kayitli.' });
-      return;
+    const exists = await users.findOne({ email: email.toLowerCase() });
+    if (exists) {
+      response.status(409).json({ message: "Bu e-posta adresi zaten kayitli." }); return;
     }
-
-    const user = {
-      userId: store.nextId++,
-      fullName,
-      email,
-      password,
-    };
-
-    store.users.push(user);
-    response.status(201).json({
-      message: 'Kayit basarili.',
-      userId: user.userId,
-      fullName: user.fullName,
-      email: user.email,
-    });
+    const user = { fullName, email: email.toLowerCase(), password, createdAt: new Date() };
+    const result = await users.insertOne(user);
+    response.status(201).json({ message: "Kayit basarili.", userId: result.insertedId, fullName, email });
     return;
   }
 
-  if (action === 'login' && request.method === 'POST') {
-    const body = readBody(request);
-    const email = String(body.email || '').trim().toLowerCase();
-    const password = String(body.password || '');
-    const user = store.users.find((item) => item.email === email && item.password === password);
-
+  if (action === "login" && request.method === "POST") {
+    const { email, password } = request.body || {};
+    const user = await users.findOne({ email: email.toLowerCase(), password });
     if (!user) {
-      response.status(401).json({ message: 'E-posta veya sifre hatali.' });
-      return;
+      response.status(401).json({ message: "E-posta veya sifre hatali." }); return;
     }
-
-    response.status(200).json({
-      message: 'Giris basarili.',
-      userId: user.userId,
-      fullName: user.fullName,
-      email: user.email,
-    });
+    response.status(200).json({ message: "Giris basarili.", userId: user._id, fullName: user.fullName, email: user.email });
     return;
   }
 
-  if (action === 'logout' && request.method === 'POST') {
-    response.status(200).json({ message: 'Cikis basarili.' });
-    return;
+  if (action === "logout" && request.method === "POST") {
+    response.status(200).json({ message: "Cikis basarili." }); return;
   }
 
-  if (action === 'delete' && request.method === 'DELETE') {
-    const userId = Number(id);
-    const index = store.users.findIndex((user) => user.userId === userId);
-
-    if (index === -1) {
-      response.status(404).json({ message: 'Kullanici bulunamadi.' });
-      return;
-    }
-
-    store.users.splice(index, 1);
-    response.status(200).json({ message: 'Hesap silindi.' });
-    return;
+  if (action === "delete" && request.method === "DELETE") {
+    const { ObjectId } = await import("mongodb");
+    const id = path[1];
+    await users.deleteOne({ _id: new ObjectId(id) });
+    response.status(200).json({ message: "Hesap silindi." }); return;
   }
 
-  response.status(404).json({ message: 'Endpoint bulunamadi.' });
+  response.status(404).json({ message: "Endpoint bulunamadi." });
 }
