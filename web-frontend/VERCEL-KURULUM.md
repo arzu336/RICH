@@ -1,34 +1,42 @@
-# Vercel Kurulum (404 assets hatasi icin)
+# Vercel 404 - Panel erisimi olmadan cozum
 
-## Zorunlu ayarlar
+## Kirmizi isaret ne demek?
 
-Vercel → Project → **Settings** → **General**:
+- `<!doctype html>` kirmizi → Sayfa **bozuk** (kritik JS yuklenemedi), HTML hatasi degil.
+- `index-DAutKWGW.js` kirmizi → Bu dosya Vercel sunucusunda **yok** (404).
 
-| Alan | Deger |
-|------|--------|
-| **Root Directory** | `web-frontend` |
-| **Build Command** | `npm run build` (veya bos birak, vercel.json kullanilir) |
-| **Output Directory** | `dist` |
-| **Node.js Version** | 20.x |
+## Panel acamiyorsan
 
-**Root Directory bos veya repo kok (`RICH`) ise `/assets/index-xxx.js` 404 verir.**
+Repo kokune `vercel.json` eklendi. **GitHub'a push** edince Vercel otomatik dogru build etmeli:
 
-## Environment Variables
+```powershell
+cd D:\RICH
+git add vercel.json web-frontend/vite.config.js web-frontend/package.json web-frontend/vercel.json
+git commit -m "fix: Vercel build output web-frontend/dist"
+git push
+```
 
-| Key | Deger |
-|-----|--------|
-| `VITE_API_BASE_URL` | *(bos birak)* |
+## Kendi Vercel projen (en garantisi)
 
-Bos birakinca uygulama `/api/auth` ve `/api/products` kullanir (Vercel serverless).
+1. https://vercel.com → ucretsiz hesap
+2. **Add New Project** → `arzu336/RICH` sec
+3. Root Directory: `web-frontend`
+4. Deploy
 
-## Deploy sonrasi test
+Boylece Rojda'nin yanlis ayarli projesine bagli kalmazsin.
 
-1. `https://PROJE.vercel.app/` ac
-2. Build logda `dist/assets` icinde `.js` dosyasi gorunmeli
-3. Tarayicida ac: `https://PROJE.vercel.app/assets/index-xxxxx.js` (index.html icindeki isim)
+## Push sonrasi test
 
-## Hala 404 ise
+Gizli sekmede:
+- `https://SITE.vercel.app/deploy-check.txt`
+- `https://SITE.vercel.app/assets/index-DAutKWGW.js` (veya View Source'taki yeni isim)
 
-1. Deployments → son deploy → **Redeploy** (Clear cache ile)
-2. Telefonda site verilerini sil / PWA kaldir
-3. Chrome → Application → Service Workers → Unregister
+## Lokal
+
+```powershell
+cd D:\RICH\web-frontend
+npm run build
+npm run preview
+```
+
+`http://localhost:4173` acilir.
