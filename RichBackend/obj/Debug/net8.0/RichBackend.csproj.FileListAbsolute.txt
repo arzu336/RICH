@@ -418,3 +418,4 @@ D:\RICH\RichBackend\obj\Debug\net8.0\refint\RichBackend.dll
 D:\RICH\RichBackend\obj\Debug\net8.0\RichBackend.pdb
 D:\RICH\RichBackend\obj\Debug\net8.0\RichBackend.genruntimeconfig.cache
 D:\RICH\RichBackend\obj\Debug\net8.0\ref\RichBackend.dll
+D:\RICH\RichBackend\bin\Debug\net8.0\RabbitMQ.Client.dll
