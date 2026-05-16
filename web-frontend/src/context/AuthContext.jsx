@@ -34,23 +34,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-const register = async (name, email, password) => {
+  const register = async (name, email, password) => {
     try {
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: name,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ fullName: name, email, password }),
       });
 
       if (!response.ok) return false;
-
-      const data = await response.json(); // { message, userId, fullName, email }
-      localStorage.setItem("user", JSON.stringify(data)); // tarayıcıya kaydet
-      setUser(data); // state'e yaz, sayfa yenilenince kaybolmaz
       return true;
 
     } catch (error) {
