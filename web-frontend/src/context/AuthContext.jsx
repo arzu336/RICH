@@ -67,7 +67,7 @@ const register = async (name, email, password) => {
     if (!user?.userId) return false;
 
     try {
-      const response = await fetch(`${API_URL}/delete?id=${encodeURIComponent(user.userId)}`, {
+      const response = await fetch(`${API_URL}/delete/${encodeURIComponent(user.userId)}`, {
         method: "DELETE",
       });
 

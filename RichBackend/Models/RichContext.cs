@@ -18,6 +18,7 @@ namespace RichBackend.Models
             modelBuilder.Entity<PaymentRequest>().ToTable("Payments");
             modelBuilder.Entity<FavoriteRequest>().ToTable("Favorites");
             modelBuilder.Entity<Product>().ToTable("Products");
+            modelBuilder.Entity<User>().ToTable("Users");
         }
     }
 }

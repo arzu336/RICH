@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RichBackend.Models;
 using RichBackend.Services;
 
@@ -8,18 +9,19 @@ namespace RichBackend.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private static readonly List<User> Users = new();
+        private readonly RichContext _context;
         private readonly IEventPublisher _eventPublisher;
 
-        public AuthController(IEventPublisher eventPublisher)
+        public AuthController(RichContext context, IEventPublisher eventPublisher)
         {
+            _context = context;
             _eventPublisher = eventPublisher;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var existingUser = Users.FirstOrDefault(u => u.Email == request.Email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (existingUser != null)
             {
@@ -28,13 +30,14 @@ namespace RichBackend.Controllers
 
             var user = new User
             {
-                Id = Users.Count + 1,
                 FullName = request.FullName,
                 Email = request.Email,
                 Password = request.Password
             };
 
-            Users.Add(user);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
             _eventPublisher.Publish("user.registered", new
             {
                 user.Id,
@@ -52,9 +55,9 @@ namespace RichBackend.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var user = Users.FirstOrDefault(u =>
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.Email == request.Email &&
                 u.Password == request.Password);
 
@@ -91,16 +94,18 @@ namespace RichBackend.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteAccount(int id)
+        public async Task<IActionResult> DeleteAccount(int id)
         {
-            var user = Users.FirstOrDefault(u => u.Id == id);
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
                 return NotFound("Kullanici bulunamadi.");
             }
 
-            Users.Remove(user);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
             _eventPublisher.Publish("user.deleted", new
             {
                 user.Id,
