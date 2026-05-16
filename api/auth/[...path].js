@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require("mongodb");
+const { randomBytes, scryptSync, timingSafeEqual } = require("crypto");
 
 const uri = process.env.MONGODB_URI;
 let client;
@@ -9,6 +10,28 @@ async function getDb() {
     await client.connect();
   }
   return client.db("rich").collection("users");
+}
+
+function hashPassword(password) {
+  const salt = randomBytes(16).toString("hex");
+  const hash = scryptSync(password, salt, 64).toString("hex");
+  return `scrypt:${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedPassword) {
+  if (!storedPassword) return false;
+  if (!storedPassword.startsWith("scrypt:")) return password === storedPassword;
+
+  const [, salt, storedHash] = storedPassword.split(":");
+  if (!salt || !storedHash) return false;
+
+  const hashBuffer = Buffer.from(scryptSync(password, salt, 64).toString("hex"), "hex");
+  const storedHashBuffer = Buffer.from(storedHash, "hex");
+
+  return (
+    hashBuffer.length === storedHashBuffer.length &&
+    timingSafeEqual(hashBuffer, storedHashBuffer)
+  );
 }
 
 module.exports = async function handler(request, response) {
@@ -31,7 +54,7 @@ module.exports = async function handler(request, response) {
     if (exists) {
       response.status(409).json({ message: "Bu e-posta adresi zaten kayitli." }); return;
     }
-    const user = { fullName, email: email.toLowerCase(), password, createdAt: new Date() };
+    const user = { fullName, email: email.toLowerCase(), password: hashPassword(password), createdAt: new Date() };
     const result = await users.insertOne(user);
     response.status(201).json({ message: "Kayit basarili.", userId: result.insertedId, fullName, email });
     return;
@@ -39,9 +62,15 @@ module.exports = async function handler(request, response) {
 
   if (action === "login" && request.method === "POST") {
     const { email, password } = request.body || {};
-    const user = await users.findOne({ email: email.toLowerCase(), password });
-    if (!user) {
+    const user = await users.findOne({ email: email.toLowerCase() });
+    if (!user || !verifyPassword(password, user.password)) {
       response.status(401).json({ message: "E-posta veya sifre hatali." }); return;
+    }
+    if (!user.password.startsWith("scrypt:")) {
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { password: hashPassword(password), passwordUpdatedAt: new Date() } }
+      );
     }
     response.status(200).json({ message: "Giris basarili.", userId: user._id, fullName: user.fullName, email: user.email });
     return;

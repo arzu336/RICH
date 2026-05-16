@@ -68,17 +68,24 @@ const register = async (name, email, password) => {
   const deleteAccount = async () => {
     if (!user?.userId) return false;
 
-    const response = await fetch(`${API_URL}/delete/${user.userId}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await fetch(`${API_URL}/delete?id=${encodeURIComponent(user.userId)}`, {
+        method: "DELETE",
+      });
 
-    if (response.ok) {
-      localStorage.removeItem("user");
-      setUser(null);
-      return true;
+      if (response.ok) {
+        localStorage.removeItem("user");
+        setUser(null);
+        return true;
+      }
+
+      const error = await response.json().catch(() => null);
+      console.error("Hesap silme hatasi:", error?.message || response.statusText);
+      return false;
+    } catch (error) {
+      console.error("Hesap silme hatasi:", error);
+      return false;
     }
-
-    return false;
   };
 
   const addToCart = (product) => {

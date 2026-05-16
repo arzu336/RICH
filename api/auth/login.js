@@ -1,4 +1,10 @@
-const { getUsersCollection, handleOptions, setCorsHeaders } = require("../../lib/auth-db.js");
+const {
+  getUsersCollection,
+  handleOptions,
+  hashPassword,
+  setCorsHeaders,
+  verifyPassword,
+} = require("../../lib/auth-db.js");
 
 module.exports = async function handler(request, response) {
   setCorsHeaders(response);
@@ -18,11 +24,18 @@ module.exports = async function handler(request, response) {
     }
 
     const users = await getUsersCollection();
-    const user = await users.findOne({ email: email.toLowerCase().trim(), password });
+    const user = await users.findOne({ email: email.toLowerCase().trim() });
 
-    if (!user) {
+    if (!user || !verifyPassword(password, user.password)) {
       response.status(401).json({ message: "E-posta veya sifre hatali." });
       return;
+    }
+
+    if (!user.password.startsWith("scrypt:")) {
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { password: hashPassword(password), passwordUpdatedAt: new Date() } }
+      );
     }
 
     response.status(200).json({

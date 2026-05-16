@@ -1,4 +1,9 @@
-const { getUsersCollection, handleOptions, setCorsHeaders } = require("../../lib/auth-db.js");
+const {
+  getUsersCollection,
+  handleOptions,
+  hashPassword,
+  setCorsHeaders,
+} = require("../../lib/auth-db.js");
 
 module.exports = async function handler(request, response) {
   setCorsHeaders(response);
@@ -29,7 +34,7 @@ module.exports = async function handler(request, response) {
     const user = {
       fullName: fullName.trim(),
       email: normalizedEmail,
-      password,
+      password: hashPassword(password),
       createdAt: new Date(),
     };
     const result = await users.insertOne(user);
