@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+const { MongoClient, ObjectId } = require("mongodb");
 
 const uri = process.env.MONGODB_URI;
 let client;
@@ -11,7 +11,7 @@ async function getDb() {
   return client.db("rich").collection("users");
 }
 
-export default async function handler(request, response) {
+module.exports = async function handler(request, response) {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -52,11 +52,10 @@ export default async function handler(request, response) {
   }
 
   if (action === "delete" && request.method === "DELETE") {
-    const { ObjectId } = await import("mongodb");
     const id = path[1];
     await users.deleteOne({ _id: new ObjectId(id) });
     response.status(200).json({ message: "Hesap silindi." }); return;
   }
 
   response.status(404).json({ message: "Endpoint bulunamadi." });
-}
+};

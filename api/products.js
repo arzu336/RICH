@@ -25,11 +25,11 @@ const products = [
   { id: 24, name: "Gumus Bileklik Seti", price: 280, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600", category: "aksesuar", stok: 11, renk: "Gumus", beden: "Standart" },
 ];
 
-export default function handler(request, response) {
+module.exports = function handler(request, response) {
   const { category } = request.query;
   const result = category
     ? products.filter((product) => product.category === category)
     : products;
 
   response.status(200).json(result);
-}
+};
