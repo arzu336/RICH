@@ -33,12 +33,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<RichContext>();
-    dbContext.Database.Migrate();
-}
-
 // 5. GELİŞTİRME ORTAMI AYARLARI
 if (app.Environment.IsDevelopment())
 {
