@@ -34,23 +34,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-const register = async (name, email, password) => {
+  const register = async (name, email, password, phone = "") => {
     try {
+      const payload = {
+        fullName: name,
+        email,
+        password,
+      };
+
+      if (phone) {
+        payload.phone = phone;
+        payload.phoneNumber = phone;
+      }
+
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: name,
-          email,
-          password,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) return false;
 
-      await response.json();
+      const data = await response.json();
+      localStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
       return true;
-
     } catch (error) {
       console.error("Register hatası:", error);
       return false;
@@ -58,7 +66,12 @@ const register = async (name, email, password) => {
   };
 
   const logout = async () => {
-    await fetch(`${API_URL}/logout`, { method: "POST" });
+    try {
+      await fetch(`${API_URL}/logout`, { method: "POST" });
+    } catch (error) {
+      console.error("Logout hatası:", error);
+    }
+
     localStorage.removeItem("user");
     setUser(null);
   };
@@ -78,10 +91,10 @@ const register = async (name, email, password) => {
       }
 
       const error = await response.json().catch(() => null);
-      console.error("Hesap silme hatasi:", error?.message || response.statusText);
+      console.error("Hesap silme hatası:", error?.message || response.statusText);
       return false;
     } catch (error) {
-      console.error("Hesap silme hatasi:", error);
+      console.error("Hesap silme hatası:", error);
       return false;
     }
   };
