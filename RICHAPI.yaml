@@ -1,0 +1,17 @@
+openapi: 3.0.3
+info:
+  title: RICH API
+  version: 1.0.0
+paths:
+  /api/products:
+    get:
+      summary: Ürünleri listeler
+  /api/auth/login:
+    post:
+      summary: Kullanıcı girişi
+  /api/auth/register:
+    post:
+      summary: Kullanıcı kaydı
+  /api/health:
+    get:
+      summary: API sağlık kontrolü
