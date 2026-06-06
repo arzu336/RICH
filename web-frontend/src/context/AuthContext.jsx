@@ -2,7 +2,9 @@ import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-const API_URL = "https://efficient-energy-production-b18f.up.railway.app/api/auth";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "");
+const API_URL = `${API_BASE_URL}/api/auth`;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
