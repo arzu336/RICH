@@ -10,9 +10,8 @@ createRoot(document.getElementById('root')).render(
     </AuthProvider>
 )
 
-// Service worker gecici kapali (Vercel deploy / eski cache sorunlarini onlemek icin)
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('/service-worker.js').catch(() => {});
-//   });
-// }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+  });
+}

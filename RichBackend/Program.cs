@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RichBackend.Models;
+using RichBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<RichContext>(options =>
 
 // 3. CONTROLLER SERVİSİNİ EKLE
 builder.Services.AddControllers();
+builder.Services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
 
 // 4. CORS AYARI (React'ın Backend'e her türlü erişebilmesi için en geniş izinler)
 builder.Services.AddCors(options =>
