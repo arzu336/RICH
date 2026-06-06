@@ -1,15 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm ci --prefix web-frontend",
-  "buildCommand": "npm run build --prefix web-frontend",
-  "outputDirectory": "web-frontend/dist",
-  "functions": {
-    "web-frontend/api/**/*.js": {
-      "runtime": "@vercel/node@3"
-    }
-  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/web-frontend/api/$1" }
-  ],
-  "framework": null
+    {
+      "source": "/((?!api/|assets/|favicon\\.svg|manifest\\.webmanifest|service-worker\\.js).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
