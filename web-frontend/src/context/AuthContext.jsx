@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password) => {
+const register = async (name, email, password) => {
     try {
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
@@ -44,7 +44,13 @@ export const AuthProvider = ({ children }) => {
         }),
       });
 
-      return response.ok;
+      if (!response.ok) return false;
+
+      const data = await response.json(); // { message, userId, fullName, email }
+      localStorage.setItem("user", JSON.stringify(data)); // tarayıcıya kaydet
+      setUser(data); // state'e yaz, sayfa yenilenince kaybolmaz
+      return true;
+
     } catch (error) {
       console.error("Register hatası:", error);
       return false;
