@@ -25,66 +25,11 @@ const products = [
   { id: 24, name: "Gumus Bileklik Seti", price: 280, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600", category: "aksesuar", stok: 11, renk: "Gumus", beden: "Standart" },
 ];
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
-const cacheTtlSeconds = 300;
-
-async function redisCommand(command) {
-  if (!redisUrl || !redisToken) return null;
-
-  const result = await fetch(redisUrl, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${redisToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(command),
-  });
-
-  if (!result.ok) {
-    throw new Error(`Redis request failed with status ${result.status}`);
-  }
-
-  return result.json();
-}
-
-async function getCachedProducts(cacheKey) {
-  const data = await redisCommand(["GET", cacheKey]);
-  return data?.result ? JSON.parse(data.result) : null;
-}
-
-async function setCachedProducts(cacheKey, value) {
-  await redisCommand(["SET", cacheKey, JSON.stringify(value), "EX", cacheTtlSeconds]);
-}
-
-module.exports = async function handler(request, response) {
+export default function handler(request, response) {
   const { category } = request.query;
-  const normalizedCategory = Array.isArray(category) ? category[0] : category;
-  const cacheKey = `products:${normalizedCategory || "all"}`;
-
-  try {
-    const cachedProducts = await getCachedProducts(cacheKey);
-
-    if (cachedProducts) {
-      response.setHeader("X-Cache", "HIT");
-      response.status(200).json(cachedProducts);
-      return;
-    }
-  } catch (error) {
-    console.warn("Redis cache read failed:", error.message);
-  }
-
-  const result = normalizedCategory
-    ? products.filter((product) => product.category === normalizedCategory)
+  const result = category
+    ? products.filter((product) => product.category === category)
     : products;
 
-  try {
-    await setCachedProducts(cacheKey, result);
-    response.setHeader("X-Cache", redisUrl && redisToken ? "MISS" : "DISABLED");
-  } catch (error) {
-    console.warn("Redis cache write failed:", error.message);
-    response.setHeader("X-Cache", "BYPASS");
-  }
-
   response.status(200).json(result);
-};
+}
