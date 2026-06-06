@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import fallbackProducts from "../data/products";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "");
-const API_URL = `${API_BASE_URL}/api/products`;
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const API_CANDIDATES = [
+  API_BASE_URL ? `${API_BASE_URL}/api/products` : null,
+  "/api/products",
+].filter(Boolean);
 
 // Shimmer / Skeleton kart bileşeni
 const SkeletonCard = () => (
@@ -32,16 +35,39 @@ function UrunDetay({ selectedCategory }) {
       setLoading(true);
       setError("");
       try {
-        const url = selectedCategory
-          ? `${API_URL}?category=${selectedCategory}`
-          : API_URL;
+        let data = null;
+        let lastError = null;
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Ürünler yüklenemedi.");
-        const data = await res.json();
+        for (const endpoint of API_CANDIDATES) {
+          const url = selectedCategory
+            ? `${endpoint}?category=${encodeURIComponent(selectedCategory)}`
+            : endpoint;
+
+          try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            data = await res.json();
+            break;
+          } catch (fetchError) {
+            lastError = fetchError;
+          }
+        }
+
+        if (!data) {
+          data = selectedCategory
+            ? fallbackProducts.filter((product) => product.category === selectedCategory)
+            : fallbackProducts;
+          console.warn("API ürün servisine erişilemedi, yerel ürün listesi kullanıldı.", lastError);
+        }
+
         setUrunler(data);
       } catch (err) {
-        setError(err.message || "Bir hata oluştu.");
+        const data = selectedCategory
+          ? fallbackProducts.filter((product) => product.category === selectedCategory)
+          : fallbackProducts;
+        setUrunler(data);
+        setError("");
+        console.warn("Ürünler yerel listeden yüklendi.", err);
       } finally {
         setLoading(false);
       }

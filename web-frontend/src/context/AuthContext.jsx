@@ -2,9 +2,8 @@ import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "");
-const API_URL = `${API_BASE_URL}/api/auth`;
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "")).replace(/\/$/, "");
+const API_URL = API_BASE_URL ? `${API_BASE_URL}/api/auth` : "/api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -60,7 +59,12 @@ const register = async (name, email, password) => {
   };
 
   const logout = async () => {
-    await fetch(`${API_URL}/logout`, { method: "POST" });
+    try {
+      await fetch(`${API_URL}/logout`, { method: "POST" });
+    } catch (error) {
+      console.warn("Logout API erişilemedi, lokal çıkış yapılacak.", error);
+    }
+
     localStorage.removeItem("user");
     setUser(null);
   };
