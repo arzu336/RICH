@@ -2,9 +2,7 @@ import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5227" : "");
-const API_URL = `${API_BASE_URL}/api/auth`;
+const API_URL = "http://localhost:5227/api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -34,31 +32,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, phone = "") => {
+  const register = async (name, email, password) => {
     try {
-      const payload = {
-        fullName: name,
-        email,
-        password,
-      };
-
-      if (phone) {
-        payload.phone = phone;
-        payload.phoneNumber = phone;
-      }
-
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          fullName: name,
+          email,
+          password,
+        }),
       });
 
-      if (!response.ok) return false;
-
-      const data = await response.json();
-      localStorage.setItem("user", JSON.stringify(data));
-      setUser(data);
-      return true;
+      return response.ok;
     } catch (error) {
       console.error("Register hatası:", error);
       return false;
@@ -66,12 +52,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try {
-      await fetch(`${API_URL}/logout`, { method: "POST" });
-    } catch (error) {
-      console.error("Logout hatası:", error);
-    }
-
+    await fetch(`${API_URL}/logout`, { method: "POST" });
     localStorage.removeItem("user");
     setUser(null);
   };
@@ -79,24 +60,17 @@ export const AuthProvider = ({ children }) => {
   const deleteAccount = async () => {
     if (!user?.userId) return false;
 
-    try {
-      const response = await fetch(`${API_URL}/delete/${encodeURIComponent(user.userId)}`, {
-        method: "DELETE",
-      });
+    const response = await fetch(`${API_URL}/delete/${user.userId}`, {
+      method: "DELETE",
+    });
 
-      if (response.ok) {
-        localStorage.removeItem("user");
-        setUser(null);
-        return true;
-      }
-
-      const error = await response.json().catch(() => null);
-      console.error("Hesap silme hatası:", error?.message || response.statusText);
-      return false;
-    } catch (error) {
-      console.error("Hesap silme hatası:", error);
-      return false;
+    if (response.ok) {
+      localStorage.removeItem("user");
+      setUser(null);
+      return true;
     }
+
+    return false;
   };
 
   const addToCart = (product) => {
