@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AuthScreen from "./screens/AuthScreen";
-import RojdaMobileBackend from "./screens/RojdaMobileBackend";
+import BuketMobileFrontend from "./screens/BuketMobileFrontend";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -22,13 +22,13 @@ export default function App() {
       <View style={styles.topBar}>
         <View>
           <Text style={styles.logo}>RICH</Text>
-          <Text style={styles.userText}>Rojda Mobile Back-End · {user.email}</Text>
+          <Text style={styles.userText}>Buket Mobile Front-End · {user.email}</Text>
         </View>
         <TouchableOpacity style={styles.logoutBtn} onPress={() => setUser(null)}>
           <Text style={styles.logoutText}>Çıkış</Text>
         </TouchableOpacity>
       </View>
-      <RojdaMobileBackend />
+      <BuketMobileFrontend />
     </SafeAreaView>
   );
 }

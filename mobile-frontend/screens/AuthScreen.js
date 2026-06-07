@@ -3,8 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "reac
 
 export default function AuthScreen({ onLogin }) {
   const [mode, setMode] = useState("login");
-  const [name, setName] = useState("Rojda YILDIZ");
-  const [email, setEmail] = useState("rojda@rich.com");
+  const [name, setName] = useState("Buket KARACALI");
+  const [email, setEmail] = useState("buket@rich.com");
   const [password, setPassword] = useState("123456");
 
   const submit = () => {
@@ -16,7 +16,7 @@ export default function AuthScreen({ onLogin }) {
     <View style={styles.wrap}>
       <View style={styles.card}>
         <Text style={styles.logo}>RICH</Text>
-        <Text style={styles.kicker}>ROJDA · MOBILE BACK-END</Text>
+        <Text style={styles.kicker}>BUKET · MOBILE FRONT-END</Text>
         <Text style={styles.title}>{mode === "login" ? "Giriş Yap" : "Kayıt Ol"}</Text>
 
         {mode === "register" && <TextInput style={styles.input} placeholder="Ad Soyad" placeholderTextColor="#60718d" value={name} onChangeText={setName} />}
